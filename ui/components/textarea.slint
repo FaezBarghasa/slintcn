@@ -1,0 +1,37 @@
+import { Theme } from "../tokens.slint";
+import { TextEdit } from "std-widgets.slint";
+
+export component Textarea {
+    in property <string> label: "";
+    in property <string> placeholder-text: "";
+    in-out property <string> text <=> input.text;
+    in property <bool> disabled: false;
+
+    min-width: 150px;
+    min-height: 80px;
+
+    VerticalLayout {
+        spacing: Theme.spacing.xs;
+
+        if (root.label != "") : Text {
+            text: root.label;
+            font-family: Theme.typography.font_family;
+            font-size: Theme.typography.body_size;
+            color: Theme.palette.text_primary;
+            font-weight: Theme.typography.header_weight;
+        }
+
+        Rectangle {
+            border-radius: Theme.spacing.sm;
+            border-width: 1px;
+            border-color: input.has-focus ? Theme.palette.primary : Theme.palette.border;
+            background: Theme.palette.surface;
+            
+            input := TextEdit {
+                text: "";
+                font-size: Theme.typography.body_size;
+                enabled: !root.disabled;
+            }
+        }
+    }
+}

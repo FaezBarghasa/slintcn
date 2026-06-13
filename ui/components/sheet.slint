@@ -1,0 +1,74 @@
+import { Theme } from "../tokens.slint";
+import { Button } from "button.slint";
+
+export component Sheet {
+    in property <string> title: "";
+    in property <string> description: "";
+    in property <string> side: "right"; // "left" or "right"
+    in-out property <bool> is-open: false;
+    
+    callback closed();
+    
+    if (root.is-open) : TouchArea {
+        width: 100%;
+        height: 100%;
+        
+        // Backdrop
+        Rectangle {
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        // Sheet Modal
+        Rectangle {
+            width: 300px;
+            height: 100%;
+            x: root.side == "right" ? parent.width - self.width : 0;
+            background: Theme.palette.surface;
+            border-width: 1px;
+            border-color: Theme.palette.border;
+            drop-shadow-blur: 16px;
+            drop-shadow-color: rgba(0, 0, 0, 0.2);
+            
+            // Basic slide-in animation placeholder
+            animate x { duration: Theme.animation.normal; easing: ease-out; }
+            
+            VerticalLayout {
+                padding: Theme.spacing.lg;
+                spacing: Theme.spacing.md;
+                
+                VerticalLayout {
+                    spacing: Theme.spacing.xs;
+                    Text {
+                        text: root.title;
+                        font-family: Theme.typography.font_family;
+                        font-size: Theme.typography.header_size;
+                        font-weight: Theme.typography.header_weight;
+                        color: Theme.palette.text_primary;
+                    }
+                    if (root.description != "") : Text {
+                        text: root.description;
+                        font-family: Theme.typography.font_family;
+                        font-size: Theme.typography.body_size;
+                        color: Theme.palette.text_secondary;
+                        wrap: word-wrap;
+                    }
+                }
+                
+                @children
+                
+                VerticalLayout {
+                    alignment: end;
+                    Button {
+                        text: "Close";
+                        clicked => {
+                            root.is-open = false;
+                            root.closed();
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

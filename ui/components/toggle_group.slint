@@ -1,0 +1,27 @@
+import { Theme } from "../tokens.slint";
+import { Toggle } from "toggle.slint";
+
+export component ToggleGroup {
+    in property <[string]> options: [];
+    in-out property <int> selected-index: -1;
+
+    callback selected(int, string);
+
+    HorizontalLayout {
+        spacing: Theme.spacing.xs;
+        
+        for option[index] in root.options : Toggle {
+            text: option;
+            pressed: root.selected-index == index;
+            toggled(pressed) => {
+                if (pressed) {
+                    root.selected-index = index;
+                    root.selected(index, option);
+                } else if (root.selected-index == index) {
+                    root.selected-index = -1;
+                    root.selected(-1, "");
+                }
+            }
+        }
+    }
+}

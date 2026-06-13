@@ -1,0 +1,41 @@
+import { Theme } from "../tokens.slint";
+
+export component HoverCard {
+    in property <string> trigger-text: "Hover Me";
+    
+    width: trigger.width;
+    height: trigger.height;
+    
+    trigger := Text {
+        text: root.trigger-text;
+        font-family: Theme.typography.font_family;
+        font-size: Theme.typography.body_size;
+        color: Theme.palette.text_primary;
+        font-weight: Theme.typography.header_weight;
+    }
+    
+    ta := TouchArea {
+        width: 100%;
+        height: 100%;
+    }
+    
+    if (ta.has-hover) : PopupWindow {
+        x: 0;
+        y: trigger.height + Theme.spacing.xs;
+        
+        Rectangle {
+            width: 250px;
+            border-radius: Theme.spacing.sm;
+            background: Theme.palette.surface;
+            border-width: 1px;
+            border-color: Theme.palette.border;
+            drop-shadow-blur: 8px;
+            drop-shadow-color: rgba(0, 0, 0, 0.15);
+            
+            VerticalLayout {
+                padding: Theme.spacing.md;
+                @children
+            }
+        }
+    }
+}

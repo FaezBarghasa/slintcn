@@ -1,0 +1,87 @@
+import { Theme } from "../tokens.slint";
+import { Button } from "button.slint";
+
+export component Drawer {
+    in property <string> title: "";
+    in property <string> description: "";
+    in-out property <bool> is-open: false;
+    
+    callback closed();
+    
+    if (root.is-open) : TouchArea {
+        width: 100%;
+        height: 100%;
+        
+        // Backdrop
+        Rectangle {
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        // Bottom Drawer Modal
+        Rectangle {
+            width: 100%;
+            height: 300px; // Default height
+            y: parent.height - self.height;
+            background: Theme.palette.surface;
+            border-top-left-radius: Theme.spacing.lg;
+            border-top-right-radius: Theme.spacing.lg;
+            border-width: 1px;
+            border-color: Theme.palette.border;
+            drop-shadow-blur: 16px;
+            drop-shadow-color: rgba(0, 0, 0, 0.2);
+            
+            animate y { duration: Theme.animation.normal; easing: ease-out; }
+            
+            VerticalLayout {
+                padding: Theme.spacing.lg;
+                spacing: Theme.spacing.md;
+                
+                // Handle/Pill
+                HorizontalLayout {
+                    alignment: center;
+                    Rectangle {
+                        width: 40px;
+                        height: 4px;
+                        border-radius: 2px;
+                        background: Theme.palette.border;
+                    }
+                }
+                
+                VerticalLayout {
+                    spacing: Theme.spacing.xs;
+                    Text {
+                        text: root.title;
+                        font-family: Theme.typography.font_family;
+                        font-size: Theme.typography.header_size;
+                        font-weight: Theme.typography.header_weight;
+                        color: Theme.palette.text_primary;
+                        horizontal-alignment: center;
+                    }
+                    if (root.description != "") : Text {
+                        text: root.description;
+                        font-family: Theme.typography.font_family;
+                        font-size: Theme.typography.body_size;
+                        color: Theme.palette.text_secondary;
+                        wrap: word-wrap;
+                        horizontal-alignment: center;
+                    }
+                }
+                
+                @children
+                
+                VerticalLayout {
+                    alignment: end;
+                    Button {
+                        text: "Close";
+                        clicked => {
+                            root.is-open = false;
+                            root.closed();
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

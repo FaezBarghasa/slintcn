@@ -1,0 +1,53 @@
+import { Theme } from "../tokens.slint";
+import { ScrollView } from "std-widgets.slint";
+
+export component Carousel {
+    width: 100%;
+    
+    HorizontalLayout {
+        spacing: Theme.spacing.md;
+
+        // Left Arrow
+        Rectangle {
+            width: 32px;
+            background: ta_left.has-hover ? Theme.palette.surface_raised : Theme.palette.surface;
+            border-radius: Theme.spacing.sm;
+            border-width: 1px;
+            border-color: Theme.palette.border;
+            
+            Text {
+                text: "<";
+                color: Theme.palette.text_primary;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+            ta_left := TouchArea {}
+        }
+
+        ScrollView {
+            horizontal-stretch: 1;
+            
+            HorizontalLayout {
+                spacing: Theme.spacing.md;
+                @children
+            }
+        }
+
+        // Right Arrow
+        Rectangle {
+            width: 32px;
+            background: ta_right.has-hover ? Theme.palette.surface_raised : Theme.palette.surface;
+            border-radius: Theme.spacing.sm;
+            border-width: 1px;
+            border-color: Theme.palette.border;
+            
+            Text {
+                text: ">";
+                color: Theme.palette.text_primary;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+            ta_right := TouchArea {}
+        }
+    }
+}

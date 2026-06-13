@@ -1,0 +1,39 @@
+import { Theme } from "../tokens.slint";
+
+export component Alert {
+    in property <string> title: "";
+    in property <string> description: "";
+    in property <string> variant: "default"; // "default", "destructive"
+
+    width: 100%;
+    
+    Rectangle {
+        border-radius: Theme.spacing.sm;
+        border-width: 1px;
+        border-color: root.variant == "destructive" ? Theme.palette.critical : Theme.palette.border;
+        background: root.variant == "destructive" ? Theme.palette.critical.with-alpha(0.1) : Theme.palette.surface;
+
+        VerticalLayout {
+            padding: Theme.spacing.md;
+            spacing: Theme.spacing.xs;
+
+            if (root.title != "") : Text {
+                text: root.title;
+                font-family: Theme.typography.font_family;
+                font-size: Theme.typography.body_size;
+                font-weight: Theme.typography.header_weight;
+                color: root.variant == "destructive" ? Theme.palette.critical : Theme.palette.text_primary;
+            }
+
+            if (root.description != "") : Text {
+                text: root.description;
+                font-family: Theme.typography.font_family;
+                font-size: Theme.typography.body_size;
+                color: root.variant == "destructive" ? Theme.palette.critical : Theme.palette.text_secondary;
+                wrap: word-wrap;
+            }
+            
+            @children
+        }
+    }
+}

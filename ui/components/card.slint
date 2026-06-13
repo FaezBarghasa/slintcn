@@ -42,16 +42,16 @@ export component Card {
                 spacing: Theme.spacing.xs;
                 if (root.title != "") : Text {
                     text: root.title;
-                    font-family: Theme.typography.font-family;
-                    font-size: Theme.typography.font-size-h3;
-                    font-weight: Theme.typography.font-weight-semibold;
-                    color: Theme.palette.on-surface;
+                    font-family: Theme.typography.font_family;
+                    font-size: Theme.typography.header_size;
+                    font-weight: Theme.typography.header_weight;
+                    color: Theme.palette.text_primary;
                 }
                 if (root.description != "") : Text {
                     text: root.description;
-                    font-family: Theme.typography.font-family;
-                    font-size: Theme.typography.font-size-body;
-                    color: Theme.palette.on-surface-variant;
+                    font-family: Theme.typography.font_family;
+                    font-size: Theme.typography.body_size;
+                    color: Theme.palette.text_secondary;
                     wrap: word-wrap;
                 }
             }

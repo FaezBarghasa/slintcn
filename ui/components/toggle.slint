@@ -1,0 +1,43 @@
+import { Theme } from "../tokens.slint";
+
+export component Toggle {
+    in property <string> text: "";
+    in-out property <bool> pressed: false;
+    in property <bool> disabled: false;
+
+    callback toggled(bool);
+
+    min-height: 36px;
+
+    bg := Rectangle {
+        border-radius: Theme.spacing.sm;
+        background: root.pressed ? Theme.palette.surface_raised : transparent;
+        
+        HorizontalLayout {
+            padding-left: Theme.spacing.md;
+            padding-right: Theme.spacing.md;
+            padding-top: Theme.spacing.sm;
+            padding-bottom: Theme.spacing.sm;
+            
+            Text {
+                text: root.text;
+                color: root.disabled ? Theme.palette.text_disabled : (root.pressed ? Theme.palette.text_primary : Theme.palette.text_secondary);
+                horizontal-alignment: center;
+                vertical-alignment: center;
+                font-family: Theme.typography.font_family;
+                font-size: Theme.typography.body_size;
+                font-weight: root.pressed ? Theme.typography.header_weight : Theme.typography.body_weight;
+            }
+        }
+
+        TouchArea {
+            enabled: !root.disabled;
+            clicked => {
+                if (!root.disabled) {
+                    root.pressed = !root.pressed;
+                    root.toggled(root.pressed);
+                }
+            }
+        }
+    }
+}

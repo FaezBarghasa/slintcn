@@ -24,18 +24,18 @@ export component AccordionItem {
 
                 Text {
                     text: root.title;
-                    font-family: Theme.typography.font-family;
-                    font-size: Theme.typography.font-size-body;
-                    font-weight: Theme.typography.font-weight-medium;
-                    color: Theme.palette.on-surface;
+                    font-family: Theme.typography.font_family;
+                    font-size: Theme.typography.body_size;
+                    font-weight: Theme.typography.header_weight;
+                    color: Theme.palette.text_primary;
                     vertical-alignment: center;
                 }
 
                 // Chevron (simulate with text or simple drawing)
                 Text {
                     text: root.is-open ? "▼" : "▶";
-                    font-size: Theme.typography.font-size-caption;
-                    color: Theme.palette.on-surface-variant;
+                    font-size: Theme.typography.caption_size;
+                    color: Theme.palette.text_secondary;
                     vertical-alignment: center;
                 }
             }
@@ -49,7 +49,8 @@ export component AccordionItem {
         }
 
         // Content
-        if (root.is-open) : content_area := Rectangle {
+        content_area := Rectangle {
+            visible: root.is-open;
             width: 100%;
             clip: true;
             

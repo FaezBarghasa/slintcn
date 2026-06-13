@@ -1,0 +1,60 @@
+import { Theme } from "../tokens.slint";
+
+export component Collapsible {
+    in property <string> title: "";
+    in-out property <bool> is-open: false;
+
+    callback toggled(bool);
+
+    VerticalLayout {
+        spacing: Theme.spacing.xs;
+
+        HorizontalLayout {
+            alignment: space-between;
+            
+            Text {
+                text: root.title;
+                font-family: Theme.typography.font_family;
+                font-size: Theme.typography.body_size;
+                font-weight: Theme.typography.header_weight;
+                color: Theme.palette.text_primary;
+                vertical-alignment: center;
+            }
+
+            Rectangle {
+                width: 32px;
+                height: 32px;
+                border-radius: 4px;
+                background: ta.has-hover ? Theme.palette.hover_overlay : transparent;
+                
+                Text {
+                    text: root.is-open ? "▲" : "▼";
+                    color: Theme.palette.text_secondary;
+                    horizontal-alignment: center;
+                    vertical-alignment: center;
+                }
+                
+                ta := TouchArea {
+                    clicked => {
+                        root.is-open = !root.is-open;
+                        root.toggled(root.is-open);
+                    }
+                }
+            }
+        }
+
+        content_area := Rectangle {
+            visible: root.is-open;
+            width: 100%;
+            clip: true;
+            
+            VerticalLayout {
+                padding: Theme.spacing.sm;
+                border-radius: Theme.spacing.sm;
+                border-width: 1px;
+                border-color: Theme.palette.border;
+                @children
+            }
+        }
+    }
+}

@@ -13,18 +13,18 @@ export component BreadcrumbItem {
             clicked => { root.clicked(); }
             Text {
                 text: root.text;
-                font-family: Theme.typography.font-family;
-                font-size: Theme.typography.font-size-body;
-                color: root.is-last ? Theme.palette.on-surface : Theme.palette.on-surface-variant;
-                font-weight: root.is-last ? Theme.typography.font-weight-medium : Theme.typography.font-weight-regular;
+                font-family: Theme.typography.font_family;
+                font-size: Theme.typography.body_size;
+                color: root.is-last ? Theme.palette.text_primary : Theme.palette.text_secondary;
+                font-weight: root.is-last ? Theme.typography.header_weight : Theme.typography.body_weight;
             }
         }
         
         if (!root.is-last) : Text {
             text: "/";
-            font-family: Theme.typography.font-family;
-            font-size: Theme.typography.font-size-body;
-            color: Theme.palette.on-surface-variant;
+            font-family: Theme.typography.font_family;
+            font-size: Theme.typography.body_size;
+            color: Theme.palette.text_secondary;
         }
     }
 }

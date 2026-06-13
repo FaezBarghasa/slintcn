@@ -11,7 +11,20 @@ import { ProgressBar } from "components/progress_bar.slint";
 import { TabWidget } from "components/tab_widget.slint";
 import { FlickableList } from "components/flickable_list.slint";
 
-export { Button, Card, Badge, BadgeStatus, Theme, Input, Checkbox, Switch, Slider, RadioGroup, ProgressBar, TabWidget, FlickableList }
+import { Avatar } from "components/avatar.slint";
+import { Skeleton } from "components/skeleton.slint";
+import { Separator } from "components/separator.slint";
+import { AccordionItem } from "components/accordion.slint";
+import { Breadcrumb, BreadcrumbItem } from "components/breadcrumb.slint";
+import { ScrollArea } from "components/scroll_area.slint";
+import { Toggle } from "components/toggle.slint";
+import { ToggleGroup } from "components/toggle_group.slint";
+import { Carousel } from "components/carousel.slint";
+import { Table, TableColumn } from "components/table.slint";
+import { Collapsible } from "components/collapsible.slint";
+import { Textarea } from "components/textarea.slint";
+
+export { Button, Card, Badge, BadgeStatus, Theme, Input, Checkbox, Switch, Slider, RadioGroup, ProgressBar, TabWidget, FlickableList, Avatar, Skeleton, Separator, AccordionItem, Breadcrumb, BreadcrumbItem, ScrollArea, Toggle, ToggleGroup, Carousel, Table, TableColumn, Collapsible, Textarea }
 
 export component Preview inherits Window {
     title: "my-slint-kit showcase";
@@ -40,7 +53,7 @@ export component Preview inherits Window {
             alignment: space-between;
 
             test_tabs := TabWidget {
-                tabs: ["Interactive Form", "Layout & Grids", "Lazy Scroll List"];
+                tabs: ["Interactive Form", "Layout & Grids", "Lazy Scroll List", "Shadcn Core"];
             }
 
             Button {
@@ -231,6 +244,125 @@ export component Preview inherits Window {
                     "Item 22: Raspberry Pi Pico W", "Item 23: Banana Pi", "Item 24: Rock Pi",
                     "Item 25: ASUS Tinker Board"
                 ];
+            }
+        }
+        // Segment 4: Shadcn Core
+        if test_tabs.active-tab == 3 : ScrollArea {
+            VerticalLayout {
+                spacing: Theme.spacing.lg;
+                padding-right: Theme.spacing.md;
+
+                Card {
+                    title: "Data Display";
+                    description: "Avatar, Separator, and Skeleton components";
+                    
+                    VerticalLayout {
+                        spacing: Theme.spacing.md;
+                        
+                        HorizontalLayout {
+                            spacing: Theme.spacing.md;
+                            Avatar { fallback: "JD"; }
+                            Avatar { fallback: "AB"; size: 60px; }
+                        }
+                        
+                        Separator {}
+                        
+                        HorizontalLayout {
+                            spacing: Theme.spacing.md;
+                            Skeleton { is-circle: true; width: 40px; height: 40px; }
+                            VerticalLayout {
+                                spacing: Theme.spacing.xs;
+                                Skeleton { width: 100px; height: 16px; border-radius: 4px; }
+                                Skeleton { width: 80px; height: 12px; border-radius: 4px; }
+                            }
+                        }
+                    }
+                }
+                
+                Card {
+                    title: "Navigation & Layout";
+                    description: "Breadcrumbs, Accordion, and Collapsible";
+                    
+                    VerticalLayout {
+                        spacing: Theme.spacing.md;
+                        
+                        Breadcrumb {
+                            BreadcrumbItem { text: "Home"; }
+                            BreadcrumbItem { text: "Components"; }
+                            BreadcrumbItem { text: "Breadcrumb"; is-last: true; }
+                        }
+                        
+                        Separator {}
+                        
+                        AccordionItem { title: "Is it accessible?"; }
+                        AccordionItem { title: "Is it styled?"; }
+                        
+                        Separator {}
+                        
+                        Collapsible {
+                            title: "Advanced Options";
+                            Text {
+                                text: "Here is the hidden content.";
+                                font-size: Theme.typography.body_size;
+                                color: Theme.palette.text_secondary;
+                            }
+                        }
+                    }
+                }
+                
+                Card {
+                    title: "Forms & Inputs";
+                    description: "Textarea, Toggle, and ToggleGroup";
+                    
+                    VerticalLayout {
+                        spacing: Theme.spacing.md;
+                        
+                        Textarea { label: "Comments"; placeholder-text: "Type your message here."; }
+                        
+                        Separator {}
+                        
+                        HorizontalLayout {
+                            spacing: Theme.spacing.sm;
+                            Toggle { text: "B"; }
+                            Toggle { text: "I"; }
+                            Toggle { text: "U"; }
+                        }
+                        
+                        ToggleGroup {
+                            options: ["Left", "Center", "Right"];
+                        }
+                    }
+                }
+                
+                Card {
+                    title: "Complex Displays";
+                    description: "Carousel and Table";
+                    
+                    VerticalLayout {
+                        spacing: Theme.spacing.md;
+                        
+                        Carousel {
+                            height: 100px;
+                            Rectangle { width: 150px; background: Theme.palette.primary; border-radius: Theme.spacing.sm; }
+                            Rectangle { width: 150px; background: Theme.palette.success; border-radius: Theme.spacing.sm; }
+                            Rectangle { width: 150px; background: Theme.palette.warning; border-radius: Theme.spacing.sm; }
+                        }
+                        
+                        Table {
+                            height: 200px;
+                            columns: [
+                                { title: "Status", width: 100px },
+                                { title: "Email", width: 200px },
+                                { title: "Amount", width: 100px },
+                            ];
+                            data: [
+                                ["Paid", "user1@example.com", "$250.00"],
+                                ["Pending", "user2@example.com", "$150.00"],
+                                ["Unpaid", "user3@example.com", "$350.00"],
+                            ];
+                        }
+                    }
+                }
             }
         }
     }

@@ -4,8 +4,14 @@ export component Separator {
     in property <string> orientation: "horizontal"; // "horizontal" or "vertical"
     in property <length> thickness: 1px;
     
-    width: root.orientation == "horizontal" ? 100% : root.thickness;
-    height: root.orientation == "horizontal" ? root.thickness : 100%;
+    horizontal-stretch: root.orientation == "horizontal" ? 1 : 0;
+    vertical-stretch: root.orientation == "vertical" ? 1 : 0;
+    
+    min-width: root.orientation == "vertical" ? root.thickness : 0px;
+    max-width: root.orientation == "vertical" ? root.thickness : 99999px;
+    
+    min-height: root.orientation == "horizontal" ? root.thickness : 0px;
+    max-height: root.orientation == "horizontal" ? root.thickness : 99999px;
     
     Rectangle {
         width: 100%;
