@@ -1,0 +1,37 @@
+import { Theme } from "../tokens.slint";
+
+export component BreadcrumbItem {
+    in property <string> text: "";
+    in property <bool> is-last: false;
+    
+    callback clicked();
+    
+    HorizontalLayout {
+        spacing: Theme.spacing.xs;
+        
+        TouchArea {
+            clicked => { root.clicked(); }
+            Text {
+                text: root.text;
+                font-family: Theme.typography.font-family;
+                font-size: Theme.typography.font-size-body;
+                color: root.is-last ? Theme.palette.on-surface : Theme.palette.on-surface-variant;
+                font-weight: root.is-last ? Theme.typography.font-weight-medium : Theme.typography.font-weight-regular;
+            }
+        }
+        
+        if (!root.is-last) : Text {
+            text: "/";
+            font-family: Theme.typography.font-family;
+            font-size: Theme.typography.font-size-body;
+            color: Theme.palette.on-surface-variant;
+        }
+    }
+}
+
+export component Breadcrumb {
+    HorizontalLayout {
+        spacing: Theme.spacing.xs;
+        @children
+    }
+}

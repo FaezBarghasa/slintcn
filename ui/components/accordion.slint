@@ -1,0 +1,73 @@
+import { Theme } from "../tokens.slint";
+
+export component AccordionItem {
+    in property <string> title: "";
+    in-out property <bool> is-open: false;
+
+    callback toggled(bool);
+
+    width: 100%;
+
+    VerticalLayout {
+        spacing: 0;
+
+        // Header
+        header := Rectangle {
+            width: 100%;
+            height: Theme.spacing.xxl;
+            background: transparent;
+
+            HorizontalLayout {
+                padding-left: Theme.spacing.md;
+                padding-right: Theme.spacing.md;
+                alignment: space-between;
+
+                Text {
+                    text: root.title;
+                    font-family: Theme.typography.font-family;
+                    font-size: Theme.typography.font-size-body;
+                    font-weight: Theme.typography.font-weight-medium;
+                    color: Theme.palette.on-surface;
+                    vertical-alignment: center;
+                }
+
+                // Chevron (simulate with text or simple drawing)
+                Text {
+                    text: root.is-open ? "▼" : "▶";
+                    font-size: Theme.typography.font-size-caption;
+                    color: Theme.palette.on-surface-variant;
+                    vertical-alignment: center;
+                }
+            }
+
+            TouchArea {
+                clicked => {
+                    root.is-open = !root.is-open;
+                    root.toggled(root.is-open);
+                }
+            }
+        }
+
+        // Content
+        if (root.is-open) : content_area := Rectangle {
+            width: 100%;
+            clip: true;
+            
+            VerticalLayout {
+                padding-left: Theme.spacing.md;
+                padding-right: Theme.spacing.md;
+                padding-bottom: Theme.spacing.md;
+                padding-top: Theme.spacing.xs;
+                
+                @children
+            }
+        }
+        
+        // Separator
+        Rectangle {
+            width: 100%;
+            height: 1px;
+            background: Theme.palette.border;
+        }
+    }
+}
