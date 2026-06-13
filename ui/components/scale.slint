@@ -6,18 +6,9 @@ export component Scale inherits Rectangle {
     in property <length> tick-length: 8px;
     in property <length> tick-thickness: 1px;
 
-    states [
-        horizontal when orientation == "horizontal" : {
-            width: 100%;
-            height: root.tick-length;
-        }
-        vertical when orientation == "vertical" : {
-            width: root.tick-length;
-            height: 100%;
-        }
-    ]
-
     if (orientation == "horizontal") : HorizontalLayout {
+        width: 100%;
+        height: 100%;
         alignment: space-between;
         for i in root.tick-count : Rectangle {
             width: root.tick-thickness;
@@ -27,6 +18,8 @@ export component Scale inherits Rectangle {
     }
 
     if (orientation == "vertical") : VerticalLayout {
+        width: 100%;
+        height: 100%;
         alignment: space-between;
         for i in root.tick-count : Rectangle {
             width: root.tick-length;
