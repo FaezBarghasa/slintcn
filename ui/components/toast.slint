@@ -1,0 +1,67 @@
+import { Theme } from "../tokens.slint";
+
+export component Toast {
+    in property <string> title: "";
+    in property <string> description: "";
+    in property <string> variant: "default"; // "default", "success", "error"
+    in-out property <bool> visible: true;
+    
+    callback dismissed();
+    
+    width: 300px;
+    
+    if (root.visible) : Rectangle {
+        border-radius: Theme.spacing.md;
+        border-width: 1px;
+        border-color: root.variant == "error" ? Theme.palette.critical : (root.variant == "success" ? Theme.palette.success : Theme.palette.border);
+        background: Theme.palette.surface;
+        drop-shadow-blur: 12px;
+        drop-shadow-color: rgba(0, 0, 0, 0.1);
+        
+        HorizontalLayout {
+            padding: Theme.spacing.md;
+            alignment: space-between;
+            
+            VerticalLayout {
+                spacing: Theme.spacing.xs;
+                if (root.title != "") : Text {
+                    text: root.title;
+                    font-family: Theme.typography.font_family;
+                    font-size: Theme.typography.body_size;
+                    font-weight: Theme.typography.header_weight;
+                    color: Theme.palette.text_primary;
+                }
+                if (root.description != "") : Text {
+                    text: root.description;
+                    font-family: Theme.typography.font_family;
+                    font-size: Theme.typography.caption_size;
+                    color: Theme.palette.text_secondary;
+                    wrap: word-wrap;
+                }
+            }
+            
+            // Close button
+            Rectangle {
+                width: 24px;
+                height: 24px;
+                border-radius: 12px;
+                background: ta.has-hover ? Theme.palette.hover_overlay : transparent;
+                
+                Text {
+                    text: "×";
+                    color: Theme.palette.text_secondary;
+                    horizontal-alignment: center;
+                    vertical-alignment: center;
+                    font-size: Theme.typography.header_size;
+                }
+                
+                ta := TouchArea {
+                    clicked => {
+                        root.visible = false;
+                        root.dismissed();
+                    }
+                }
+            }
+        }
+    }
+}

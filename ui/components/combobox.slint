@@ -1,0 +1,91 @@
+import { Theme } from "../tokens.slint";
+import { ScrollView, TextEdit } from "std-widgets.slint";
+
+export component Combobox {
+    in property <[string]> options: [];
+    in property <string> placeholder: "Search...";
+    in-out property <int> selected-index: -1;
+    in-out property <string> search-text <=> input.text;
+    in-out property <bool> is-open: false;
+
+    callback selected(int, string);
+
+    width: 200px;
+    height: 40px;
+
+    Rectangle {
+        width: 100%;
+        height: 100%;
+        border-radius: Theme.spacing.sm;
+        border-width: 1px;
+        border-color: root.is-open ? Theme.palette.primary : Theme.palette.border;
+        background: Theme.palette.surface;
+        
+        HorizontalLayout {
+            padding-left: Theme.spacing.md;
+            padding-right: Theme.spacing.md;
+            alignment: space-between;
+            
+            input := TextEdit {
+                text: "";
+                font-size: Theme.typography.body_size;
+                vertical-alignment: center;
+            }
+            
+            Text {
+                text: "▼";
+                color: Theme.palette.text_secondary;
+                vertical-alignment: center;
+                font-size: Theme.typography.caption_size;
+            }
+        }
+
+        if (root.is-open) : PopupWindow {
+            x: 0;
+            y: root.height + Theme.spacing.xs;
+            width: root.width;
+            
+            Rectangle {
+                border-radius: Theme.spacing.sm;
+                border-width: 1px;
+                border-color: Theme.palette.border;
+                background: Theme.palette.surface;
+                drop-shadow-blur: 8px;
+                drop-shadow-color: rgba(0, 0, 0, 0.15);
+                
+                ScrollView {
+                    height: min(root.options.length * 36px, 200px);
+                    
+                    VerticalLayout {
+                        for option[index] in root.options : Rectangle {
+                            height: 36px;
+                            background: ta.has-hover ? Theme.palette.hover_overlay : transparent;
+                            
+                            HorizontalLayout {
+                                padding-left: Theme.spacing.md;
+                                padding-right: Theme.spacing.md;
+                                
+                                Text {
+                                    text: option;
+                                    color: Theme.palette.text_primary;
+                                    vertical-alignment: center;
+                                    font-family: Theme.typography.font_family;
+                                    font-size: Theme.typography.body_size;
+                                }
+                            }
+                            
+                            ta := TouchArea {
+                                clicked => {
+                                    root.selected-index = index;
+                                    root.search-text = option;
+                                    root.is-open = false;
+                                    root.selected(index, option);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
