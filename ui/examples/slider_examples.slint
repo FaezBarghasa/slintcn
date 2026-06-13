@@ -1,0 +1,109 @@
+import { Slider } from "../components/slider.slint";
+import { Card } from "../components/card.slint";
+import { Theme } from "../tokens.slint";
+
+export component SliderExamples inherits Rectangle {
+    in property <bool> active: true;
+
+    VerticalLayout {
+        padding: Theme.spacing.lg;
+        spacing: Theme.spacing.xl;
+        alignment: start;
+
+        // Example 1: Basic Slider & Value Binding
+        Card {
+            VerticalLayout {
+                spacing: Theme.spacing.md;
+                Text { text: "1. Basic Slider & Value Binding"; font-weight: Theme.typography.header_weight; }
+                
+                property <float> slider-val: 50.0;
+                
+                HorizontalLayout {
+                    spacing: Theme.spacing.md;
+                    Text { 
+                        text: "Value: " + round(slider-val);
+                        vertical-alignment: center;
+                        min-width: 80px;
+                    }
+                    Slider {
+                        value: slider-val;
+                        min: 0;
+                        max: 100;
+                        changed(val) => { slider-val = val; }
+                    }
+                }
+            }
+        }
+
+        // Example 2: Disabled State
+        Card {
+            VerticalLayout {
+                spacing: Theme.spacing.md;
+                Text { text: "2. Disabled State"; font-weight: Theme.typography.header_weight; }
+                
+                Slider {
+                    value: 30;
+                    disabled: true;
+                }
+            }
+        }
+
+        // Example 3: Custom Styling (Demonstrating direct styling instead of component)
+        Card {
+            VerticalLayout {
+                spacing: Theme.spacing.md;
+                Text { text: "3. Custom Styling (Reversed & Styled)"; font-weight: Theme.typography.header_weight; }
+                
+                property <float> custom-val: 75.0;
+                
+                // A custom slider built inline to show styling/reversing capabilities
+                Rectangle {
+                    height: 24px;
+                    min-width: 150px;
+                    
+                    track := Rectangle {
+                        y: (parent.height - self.height) / 2;
+                        height: 12px;
+                        background: #fecdd3; // rose-200
+                        border-radius: 6px;
+                        
+                        // Reversed fill
+                        Rectangle {
+                            x: parent.width - self.width;
+                            y: 0;
+                            width: parent.width * (custom-val / 100.0);
+                            height: 100%;
+                            background: #e11d48; // rose-600
+                            border-radius: 6px;
+                        }
+                        
+                        // Thumb
+                        Rectangle {
+                            x: parent.width - (parent.width * (custom-val / 100.0)) - self.width / 2;
+                            y: (parent.height - self.height) / 2;
+                            width: 24px;
+                            height: 24px;
+                            border-radius: 12px;
+                            background: #fff1f2;
+                            border-width: 3px;
+                            border-color: #be123c;
+                        }
+                    }
+                    
+                    TouchArea {
+                        moved => {
+                            if (self.pressed) {
+                                let fraction = Math.max(0.0, Math.min(1.0, 1.0 - (self.mouse-x / parent.width)));
+                                custom-val = fraction * 100.0;
+                            }
+                        }
+                        clicked => {
+                            let fraction = Math.max(0.0, Math.min(1.0, 1.0 - (self.mouse-x / parent.width)));
+                            custom-val = fraction * 100.0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

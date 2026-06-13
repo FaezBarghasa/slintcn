@@ -1,0 +1,153 @@
+import { Button } from "../components/button.slint";
+import { Card } from "../components/card.slint";
+import { Theme } from "../tokens.slint";
+export component ButtonExamples inherits Rectangle {
+    in property <bool> active: true; // Used to manage gallery visibility
+    
+    VerticalLayout {
+        padding: Theme.spacing.lg;
+        spacing: Theme.spacing.xl;
+        alignment: start;
+
+        // Example 1: Basic Sizing
+        Card {
+            VerticalLayout {
+                spacing: Theme.spacing.md;
+                Text { text: "1. Basic Sizing"; font-weight: Theme.typography.header_weight; }
+                HorizontalLayout {
+                    spacing: Theme.spacing.md;
+                    Button { text: "Click me"; } // Default size wraps content
+                    Button { 
+                        text: "Wide button"; 
+                        width: 160px; 
+                        height: 48px; 
+                    }
+                }
+            }
+        }
+
+        // Example 2: Click Event
+        Card {
+            VerticalLayout {
+                spacing: Theme.spacing.md;
+                Text { text: "2. Click Event"; font-weight: Theme.typography.header_weight; }
+                
+                property <int> click-count: 0;
+                
+                HorizontalLayout {
+                    spacing: Theme.spacing.md;
+                    alignment: start;
+                    Button { 
+                        text: "Click me"; 
+                        clicked => { click-count += 1; }
+                    }
+                    Text {
+                        text: "Clicks: " + click-count;
+                        vertical-alignment: center;
+                    }
+                }
+            }
+        }
+
+        // Example 3: States
+        Card {
+            VerticalLayout {
+                spacing: Theme.spacing.md;
+                Text { text: "3. States"; font-weight: Theme.typography.header_weight; }
+                HorizontalLayout {
+                    spacing: Theme.spacing.md;
+                    alignment: start;
+                    Button { text: "Normal"; }
+                    
+                    // In Slint, a Toggle or custom state is usually used for checkable buttons,
+                    // but we will simulate a checked button via custom styling properties if supported, 
+                    // or just show a button that can be clicked to toggle style.
+                    property <bool> is-checked: true;
+                    Button { 
+                        text: "Checked"; 
+                        // Simulate checked state visually via a custom property if the button supported it,
+                        // or we just bind to the outlined property. Our port uses outlined.
+                        outlined: is-checked;
+                        clicked => { is-checked = !is-checked; }
+                    }
+                    
+                    Button { 
+                        text: "Disabled"; 
+                        disabled: true; 
+                    }
+                }
+            }
+        }
+
+        // Example 4: Custom Styling
+        Card {
+            VerticalLayout {
+                spacing: Theme.spacing.md;
+                Text { text: "4. Custom Styling"; font-weight: Theme.typography.header_weight; }
+                HorizontalLayout {
+                    spacing: Theme.spacing.md;
+                    alignment: start;
+                    
+                    // Button styled via custom properties
+                    Rectangle {
+                        width: 180px;
+                        height: 48px;
+                        background: ta.pressed ? #1d4ed8 : (ta.has-hover ? #2563eb : #3b82f6);
+                        border-radius: 12px;
+                        drop-shadow-offset-y: ta.pressed ? 1px : 4px;
+                        drop-shadow-blur: ta.pressed ? 6px : 14px;
+                        drop-shadow-color: ta.pressed ? #60a5fa : #1e3a8a;
+
+                        ta := TouchArea {}
+                        Text {
+                            text: "Press me";
+                            color: #ffffff;
+                            horizontal-alignment: center;
+                            vertical-alignment: center;
+                        }
+                    }
+
+                    // Toggle Button custom styled
+                    property <bool> toggle-state: false;
+                    Rectangle {
+                        width: 180px;
+                        height: 48px;
+                        background: toggle-state ? #16a34a : (ta2.pressed ? #1d4ed8 : #3b82f6);
+                        border-radius: 12px;
+                        drop-shadow-offset-y: 4px;
+                        drop-shadow-blur: toggle-state ? 20px : 14px;
+                        drop-shadow-color: toggle-state ? #14532d : #1e3a8a;
+
+                        ta2 := TouchArea {
+                            clicked => { toggle-state = !toggle-state; }
+                        }
+                        Text {
+                            text: "Toggle me";
+                            color: #ffffff;
+                            horizontal-alignment: center;
+                            vertical-alignment: center;
+                        }
+                    }
+                    
+                    // Local properties override
+                    Rectangle {
+                        width: 180px;
+                        height: 48px;
+                        background: #f59e0b;
+                        border-radius: 24px;
+                        border-width: 2px;
+                        border-color: #78350f;
+
+                        TouchArea {}
+                        Text {
+                            text: "Local props";
+                            color: #451a03;
+                            horizontal-alignment: center;
+                            vertical-alignment: center;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -57,6 +57,8 @@ import { Titlebar } from "components/titlebar.slint";
 
 export { Button, Card, Badge, BadgeStatus, Theme, Input, Checkbox, Switch, Slider, RadioGroup, ProgressBar, TabWidget, FlickableList, Avatar, Skeleton, Separator, AccordionItem, Breadcrumb, BreadcrumbItem, ScrollArea, Toggle, ToggleGroup, Carousel, Table, TableColumn, Collapsible, Textarea, Alert, AlertDialog, Dialog, Drawer, Sheet, HoverCard, Tooltip, Select, Combobox, Toast, Arc, Led, Roller, ButtonMatrix, Spinner, RadialGauge, Chart, Scale, CircularLayout, Gauge, VirtualKeyboard, PinPad, RollingChart, SplitChart, Stepper, BasePanel, Keypad, Titlebar }
 
+import { ExamplesGallery } from "examples/index.slint";
+export { ExamplesGallery }
 export component Preview inherits Window {
     title: "my-slint-kit showcase";
     preferred-width: 800px;
@@ -84,7 +86,7 @@ export component Preview inherits Window {
             alignment: space-between;
 
             test_tabs := TabWidget {
-                tabs: ["Interactive Form", "Layout & Grids", "Lazy Scroll List", "Shadcn Core", "LVGL & HMI"];
+                tabs: ["Interactive Form", "Layout & Grids", "Lazy Scroll List", "Shadcn Core", "LVGL & HMI", "Examples Gallery"];
             }
 
             Button {
@@ -492,5 +494,8 @@ export component Preview inherits Window {
                 }
             }
         }
+
+        // Segment 6: Examples Gallery
+        if test_tabs.active-tab == 5 : ExamplesGallery {}
     }
 }

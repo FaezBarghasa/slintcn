@@ -1,0 +1,98 @@
+import { ButtonExamples } from "button_examples.slint";
+import { SliderExamples } from "slider_examples.slint";
+import { CheckboxExamples } from "checkbox_examples.slint";
+import { SwitchExamples } from "switch_examples.slint";
+import { ProgressBarExamples } from "progress_bar_examples.slint";
+import { SpinnerExamples } from "spinner_examples.slint";
+import { Theme } from "../tokens.slint";
+import { ScrollArea } from "../components/scroll_area.slint";
+import { Separator } from "../components/separator.slint";
+
+export component ExamplesGallery inherits Rectangle {
+    background: Theme.palette.background;
+    width: 100%;
+    height: 100%;
+
+    in-out property <int> active-example: 0;
+
+    HorizontalLayout {
+        // Sidebar for navigation
+        Rectangle {
+            width: 200px;
+            background: Theme.palette.surface;
+            border-width: 1px;
+            border-color: Theme.palette.border;
+            
+            VerticalLayout {
+                padding: Theme.spacing.md;
+                Text {
+                    text: "LVGL Examples";
+                    font-size: Theme.typography.header_size;
+                    font-weight: Theme.typography.header_weight;
+                    color: Theme.palette.text_primary;
+                }
+                Rectangle { height: Theme.spacing.sm; }
+                Separator {}
+                Rectangle { height: Theme.spacing.sm; }
+                
+                VerticalLayout {
+                    spacing: Theme.spacing.sm;
+                    
+                    Rectangle {
+                        height: 36px;
+                        background: active-example == 0 ? Theme.palette.primary.with-alpha(0.1) : transparent;
+                        border-radius: Theme.spacing.sm;
+                        TouchArea { clicked => { active-example = 0; } }
+                        Text { text: "Button"; color: active-example == 0 ? Theme.palette.primary : Theme.palette.text_primary; vertical-alignment: center; x: 8px; }
+                    }
+                    Rectangle {
+                        height: 36px;
+                        background: active-example == 1 ? Theme.palette.primary.with-alpha(0.1) : transparent;
+                        border-radius: Theme.spacing.sm;
+                        TouchArea { clicked => { active-example = 1; } }
+                        Text { text: "Slider"; color: active-example == 1 ? Theme.palette.primary : Theme.palette.text_primary; vertical-alignment: center; x: 8px; }
+                    }
+                    Rectangle {
+                        height: 36px;
+                        background: active-example == 2 ? Theme.palette.primary.with-alpha(0.1) : transparent;
+                        border-radius: Theme.spacing.sm;
+                        TouchArea { clicked => { active-example = 2; } }
+                        Text { text: "Checkbox"; color: active-example == 2 ? Theme.palette.primary : Theme.palette.text_primary; vertical-alignment: center; x: 8px; }
+                    }
+                    Rectangle {
+                        height: 36px;
+                        background: active-example == 3 ? Theme.palette.primary.with-alpha(0.1) : transparent;
+                        border-radius: Theme.spacing.sm;
+                        TouchArea { clicked => { active-example = 3; } }
+                        Text { text: "Switch"; color: active-example == 3 ? Theme.palette.primary : Theme.palette.text_primary; vertical-alignment: center; x: 8px; }
+                    }
+                    Rectangle {
+                        height: 36px;
+                        background: active-example == 4 ? Theme.palette.primary.with-alpha(0.1) : transparent;
+                        border-radius: Theme.spacing.sm;
+                        TouchArea { clicked => { active-example = 4; } }
+                        Text { text: "Progress Bar"; color: active-example == 4 ? Theme.palette.primary : Theme.palette.text_primary; vertical-alignment: center; x: 8px; }
+                    }
+                    Rectangle {
+                        height: 36px;
+                        background: active-example == 5 ? Theme.palette.primary.with-alpha(0.1) : transparent;
+                        border-radius: Theme.spacing.sm;
+                        TouchArea { clicked => { active-example = 5; } }
+                        Text { text: "Spinner"; color: active-example == 5 ? Theme.palette.primary : Theme.palette.text_primary; vertical-alignment: center; x: 8px; }
+                    }
+                }
+                Rectangle { vertical-stretch: 1; }
+            }
+        }
+
+        // Main content area
+        ScrollArea {
+            if (active-example == 0) : ButtonExamples {}
+            if (active-example == 1) : SliderExamples {}
+            if (active-example == 2) : CheckboxExamples {}
+            if (active-example == 3) : SwitchExamples {}
+            if (active-example == 4) : ProgressBarExamples {}
+            if (active-example == 5) : SpinnerExamples {}
+        }
+    }
+}

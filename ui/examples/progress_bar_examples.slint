@@ -1,0 +1,76 @@
+import { ProgressBar } from "../components/progress_bar.slint";
+import { Card } from "../components/card.slint";
+import { Theme } from "../tokens.slint";
+
+export component ProgressBarExamples inherits Rectangle {
+    in property <bool> active: true;
+
+    VerticalLayout {
+        padding: Theme.spacing.lg;
+        spacing: Theme.spacing.xl;
+        alignment: start;
+
+        // Example 1: Basic Progress Bars
+        Card {
+            VerticalLayout {
+                spacing: Theme.spacing.md;
+                Text { text: "1. Basic Progress Bars"; font-weight: Theme.typography.header_weight; }
+                
+                ProgressBar { progress: 0.25; }
+                ProgressBar { progress: 0.50; }
+                ProgressBar { progress: 0.75; }
+                ProgressBar { progress: 1.0; }
+            }
+        }
+
+        // Example 2: Dynamic Value
+        Card {
+            VerticalLayout {
+                spacing: Theme.spacing.md;
+                Text { text: "2. Dynamic Value & Animation"; font-weight: Theme.typography.header_weight; }
+                
+                property <float> current-progress: 0.0;
+                
+                HorizontalLayout {
+                    spacing: Theme.spacing.md;
+                    Rectangle {
+                        width: 80px;
+                        height: 36px;
+                        background: Theme.palette.surface_raised;
+                        border-radius: Theme.spacing.sm;
+                        border-width: 1px;
+                        border-color: Theme.palette.border;
+                        TouchArea { clicked => { current-progress = Math.min(1.0, current-progress + 0.1); } }
+                        Text { text: "Increase"; vertical-alignment: center; horizontal-alignment: center; }
+                    }
+                    Rectangle {
+                        width: 80px;
+                        height: 36px;
+                        background: Theme.palette.surface_raised;
+                        border-radius: Theme.spacing.sm;
+                        border-width: 1px;
+                        border-color: Theme.palette.border;
+                        TouchArea { clicked => { current-progress = Math.max(0.0, current-progress - 0.1); } }
+                        Text { text: "Decrease"; vertical-alignment: center; horizontal-alignment: center; }
+                    }
+                }
+                
+                ProgressBar { 
+                    progress: current-progress; 
+                }
+            }
+        }
+
+        // Example 3: Custom Styling
+        Card {
+            VerticalLayout {
+                spacing: Theme.spacing.md;
+                Text { text: "3. Custom Colors"; font-weight: Theme.typography.header_weight; }
+                
+                ProgressBar { progress: 0.6; progress-color: Theme.palette.success; }
+                ProgressBar { progress: 0.8; progress-color: Theme.palette.warning; }
+                ProgressBar { progress: 0.95; progress-color: Theme.palette.critical; }
+            }
+        }
+    }
+}
