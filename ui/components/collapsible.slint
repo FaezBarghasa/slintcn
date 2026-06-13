@@ -47,12 +47,12 @@ export component Collapsible {
             visible: root.is-open;
             width: 100%;
             clip: true;
+            border-radius: Theme.spacing.sm;
+            border-width: 1px;
+            border-color: Theme.palette.border;
             
             VerticalLayout {
                 padding: Theme.spacing.sm;
-                border-radius: Theme.spacing.sm;
-                border-width: 1px;
-                border-color: Theme.palette.border;
                 @children
             }
         }

@@ -1,7 +1,7 @@
 import { Theme } from "../tokens.slint";
 import { Button } from "button.slint";
 
-export component Sheet {
+export component Sheet inherits Rectangle {
     in property <string> title: "";
     in property <string> description: "";
     in property <string> side: "right"; // "left" or "right"
@@ -9,7 +9,11 @@ export component Sheet {
     
     callback closed();
     
-    if (root.is-open) : TouchArea {
+    visible: root.is-open;
+    width: 100%;
+    height: 100%;
+    
+    TouchArea {
         width: 100%;
         height: 100%;
         

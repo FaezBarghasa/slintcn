@@ -1,0 +1,45 @@
+import { Theme } from "../tokens.slint";
+
+export component Titlebar inherits Rectangle {
+    in-out property <string> title: "Printer";
+    in-out property <string> time: "00:00 AM";
+    in-out property <int> battery-percent: 100;
+    in-out property <bool> show-battery: false;
+
+    background: Theme.palette.surface_raised;
+    height: 50px;
+
+    HorizontalLayout {
+        padding: 10px;
+        alignment: space-between;
+
+        Text {
+            text: root.title;
+            font-family: Theme.typography.font_family;
+            font-size: Theme.typography.header_size - 4px; // 20px
+            color: Theme.palette.text_primary;
+            vertical-alignment: center;
+        }
+
+        HorizontalLayout {
+            spacing: 10px;
+            alignment: end;
+
+            if root.show-battery: Text {
+                text: root.battery-percent + "%";
+                font-family: Theme.typography.font_family;
+                font-size: Theme.typography.body_size;
+                color: Theme.palette.text_primary;
+                vertical-alignment: center;
+            }
+
+            Text {
+                text: root.time;
+                font-family: Theme.typography.font_family;
+                font-size: Theme.typography.body_size;
+                color: Theme.palette.text_primary;
+                vertical-alignment: center;
+            }
+        }
+    }
+}

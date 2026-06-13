@@ -19,23 +19,23 @@ export component HoverCard {
         height: 100%;
     }
     
-    if (ta.has-hover) : PopupWindow {
+    Rectangle {
+        visible: ta.has-hover;
         x: 0;
         y: trigger.height + Theme.spacing.xs;
+        z: 1000;
         
-        Rectangle {
-            width: 250px;
-            border-radius: Theme.spacing.sm;
-            background: Theme.palette.surface;
-            border-width: 1px;
-            border-color: Theme.palette.border;
-            drop-shadow-blur: 8px;
-            drop-shadow-color: rgba(0, 0, 0, 0.15);
-            
-            VerticalLayout {
-                padding: Theme.spacing.md;
-                @children
-            }
+        width: 250px;
+        border-radius: Theme.spacing.sm;
+        background: Theme.palette.surface;
+        border-width: 1px;
+        border-color: Theme.palette.border;
+        drop-shadow-blur: 8px;
+        drop-shadow-color: rgba(0, 0, 0, 0.15);
+        
+        VerticalLayout {
+            padding: Theme.spacing.md;
+            @children
         }
     }
 }
