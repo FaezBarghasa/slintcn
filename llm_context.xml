@@ -1,0 +1,66 @@
+<codebase_context>
+  <project>
+    <name>my-slint-kit (slintcn)</name>
+    <description>A premium UI components library merging Shadcn web design principles with LVGL embedded HMI concepts, built entirely in Rust and Slint.</description>
+  </project>
+
+  <directory_structure>
+    <dir name="ui">
+      <file name="tokens.slint">Global theme variables: colors, sizes, fonts, and animation properties.</file>
+      <file name="preview.slint">Main showcase window containing tab layouts demonstrating interactive, HMI, and Shadcn controls.</file>
+      <dir name="components">
+        <description>Reusable modular UI elements. Individual files per component. Must not inherit from Window.</description>
+      </dir>
+      <dir name="examples">
+        <description>Aggregated example pages for testing. index.slint serves as the main gallery catalog.</description>
+      </dir>
+    </dir>
+    <dir name="src">
+      <file name="lib.rs">Entrypoint compiling ui/preview.slint and exporting types.</file>
+      <file name="theme.rs">Rust functions to manipulate the Slint Global Theme struct (dark mode, high fidelity rendering, animation speed scaling).</file>
+    </dir>
+    <dir name="examples/preview">
+      <description>Cargo binary package running the preview window.</description>
+    </dir>
+  </directory_structure>
+
+  <development_constraints>
+    <constraint name="no_window_inheritance_in_components">
+      All components in ui/components/ must inherit from Rectangle, Flickable, or other layout primitives. None should inherit from Window, to ensure they can be nested.
+    </constraint>
+    <constraint name="theme_binding">
+      Do not hardcode styles. All colors, spacing, and animations must bind directly to the Theme global declared in tokens.slint.
+    </constraint>
+    <constraint name="avoid_import_cycles">
+      To avoid cyclic imports, components must import only tokens.slint or icons.slint. Example screens in ui/examples/ must import components directly from their source files (e.g., import { Button } from "../components/button.slint";) and not from an umbrella module.
+    </constraint>
+    <constraint name="non_primitive_cast_workaround">
+      Do not compute complex layout dimensions inside state transitions. Instead, use inline conditional expressions directly on property declarations (e.g. width: checked ? 100px : 50px;) and animate the property.
+    </constraint>
+    <constraint name="no_placeholders">
+      When creating UI demos or test layouts, never use placeholders. Build full, production-ready widgets and actual graphics.
+    </constraint>
+  </development_constraints>
+
+  <component_index>
+    <category name="Shadcn Web UI">
+      <component name="Button">Clean text button supporting states (hover, active, disabled) and styling (outlined, text, primary).</component>
+      <component name="Card">A content container with borders, custom header, body, and footer areas.</component>
+      <component name="Badge">Label tag supporting success, warning, critical, and neutral statuses.</component>
+      <component name="Accordion">Collapsible content sections.</component>
+      <component name="Dialog">Modal overlays for focus states.</component>
+      <component name="Sheet">Slide-out panels from screen edges.</component>
+      <component name="Tooltip">Hover overlays for small descriptive elements.</component>
+    </category>
+    <category name="LVGL &amp; HMI Embedded">
+      <component name="Arc">Circular value bar supporting drag interaction.</component>
+      <component name="Slider">Linear slider track with draggable thumb.</component>
+      <component name="Led">Status indicator reflecting an analog or digital voltage state.</component>
+      <component name="ButtonMatrix">Grid of buttons for numeric/functional inputs.</component>
+      <component name="RadialGauge">Speedometer-style needle indicator with radial markings.</component>
+      <component name="Spinner">Clean circular loading indicators with smooth rotation.</component>
+      <component name="PinPad">Numeric pad optimized for access control and passcode entry.</component>
+      <component name="RollingChart">Continuous real-time line charts.</component>
+    </category>
+  </component_index>
+</codebase_context>

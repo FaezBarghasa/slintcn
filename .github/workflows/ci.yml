@@ -1,0 +1,59 @@
+name: Rust & Slint CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: Build & Verify
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libfontconfig1-dev \
+            libxkbcommon-dev \
+            libxcb-shape0-dev \
+            libxcb-xfixes0-dev \
+            libxcb1-dev
+
+      - name: Set up Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Cache Cargo Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Check Code Formatting
+        run: cargo fmt --all -- --check
+
+      - name: Run Cargo Check
+        run: cargo check --all-targets
+
+      - name: Run Cargo Clippy
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: Run Tests
+        run: cargo test --all-targets
