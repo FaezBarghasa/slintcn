@@ -1,0 +1,39 @@
+import { Theme } from "../tokens.slint";
+
+export component Avatar {
+    in property <image> icon;
+    in property <bool> has-image: false;
+    in property <string> fallback: "";
+    in property <length> size: 40px;
+
+    width: root.size;
+    height: root.size;
+
+    Rectangle {
+        width: 100%;
+        height: 100%;
+        border-radius: root.width / 2;
+        clip: true;
+        background: Theme.palette.surface-variant;
+        border-width: 1px;
+        border-color: Theme.palette.border;
+
+        if (root.has-image) : Image {
+            width: 100%;
+            height: 100%;
+            source: root.icon;
+            image-fit: cover;
+        }
+        if (!root.has-image) : Text {
+            width: 100%;
+            height: 100%;
+            text: root.fallback;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+            font-family: Theme.typography.font-family;
+            font-size: root.size * 0.4;
+            color: Theme.palette.on-surface;
+            font-weight: Theme.typography.font-weight-medium;
+        }
+    }
+}

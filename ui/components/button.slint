@@ -1,0 +1,57 @@
+import { Theme } from "../tokens.slint";
+
+export component Button {
+    in property <string> text;
+    in property <bool> disabled: false;
+    in property <bool> outlined: false;
+    
+    callback clicked();
+
+    min-width: 80px;
+    min-height: 36px;
+    
+    states [
+        disabled when disabled: {
+            bg.background: Theme.palette.surface_raised;
+            bg.border-color: Theme.palette.border;
+            txt.color: Theme.palette.text_disabled;
+        }
+        pressed when touch.pressed: {
+            bg.background: outlined ? Theme.palette.pressed_overlay : Theme.palette.primary.darker(20%);
+        }
+        hover when touch.has-hover: {
+            bg.background: outlined ? Theme.palette.hover_overlay : Theme.palette.primary.brighter(10%);
+        }
+        outlined when outlined: {
+            bg.background: transparent;
+            bg.border-color: Theme.palette.border;
+            txt.color: Theme.palette.primary;
+        }
+    ]
+
+    bg := Rectangle {
+        border-radius: Theme.spacing.sm;
+        border-width: outlined ? 1px : 0px;
+        background: Theme.palette.primary;
+        
+        animate background { duration: Theme.animation.fast; easing: cubic-bezier(0.4, 0.0, 0.2, 1); }
+
+        txt := Text {
+            text: root.text;
+            color: Theme.palette.on_primary;
+            font-family: Theme.typography.font_family;
+            font-size: Theme.typography.body_size;
+            font-weight: Theme.typography.body_weight;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+    }
+
+    touch := TouchArea {
+        clicked => {
+            if (!root.disabled) {
+                root.clicked();
+            }
+        }
+    }
+}

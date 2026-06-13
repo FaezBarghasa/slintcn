@@ -1,0 +1,73 @@
+import { Theme } from "../tokens.slint";
+
+export component Card {
+    in property <bool> interactive: false;
+    in property <string> title: "";
+    in property <string> description: "";
+    
+    callback clicked();
+
+    min-width: 100px;
+    min-height: 100px;
+
+    states [
+        pressed when interactive && touch.pressed: {
+            bg.background: Theme.palette.surface_raised.darker(10%);
+        }
+        hover when interactive && touch.has-hover: {
+            bg.background: Theme.palette.surface_raised.brighter(10%);
+        }
+    ]
+
+    bg := Rectangle {
+        border-radius: Theme.spacing.md;
+        background: Theme.palette.surface;
+        border-width: 1px;
+        border-color: Theme.palette.border;
+
+        // High fidelity shadows fallback
+        drop-shadow-color: Theme.enable_high_fidelity ? rgba(0, 0, 0, 0.15) : transparent;
+        drop-shadow-offset-x: Theme.enable_high_fidelity ? 2px : 0px;
+        drop-shadow-offset-y: Theme.enable_high_fidelity ? 4px : 0px;
+        drop-shadow-blur: Theme.enable_high_fidelity ? 8px : 0px;
+
+        animate background { duration: Theme.animation.fast; easing: cubic-bezier(0.4, 0.0, 0.2, 1); }
+        animate drop-shadow-color { duration: Theme.animation.fast; }
+
+        VerticalLayout {
+            padding: Theme.spacing.md;
+            spacing: Theme.spacing.sm;
+
+            if (root.title != "" || root.description != "") : VerticalLayout {
+                spacing: Theme.spacing.xs;
+                if (root.title != "") : Text {
+                    text: root.title;
+                    font-family: Theme.typography.font-family;
+                    font-size: Theme.typography.font-size-h3;
+                    font-weight: Theme.typography.font-weight-semibold;
+                    color: Theme.palette.on-surface;
+                }
+                if (root.description != "") : Text {
+                    text: root.description;
+                    font-family: Theme.typography.font-family;
+                    font-size: Theme.typography.font-size-body;
+                    color: Theme.palette.on-surface-variant;
+                    wrap: word-wrap;
+                }
+            }
+
+            Rectangle {
+                @children
+            }
+        }
+    }
+
+    touch := TouchArea {
+        enabled: root.interactive;
+        clicked => {
+            if (root.interactive) {
+                root.clicked();
+            }
+        }
+    }
+}

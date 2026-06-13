@@ -1,0 +1,15 @@
+import { Theme } from "../tokens.slint";
+
+export component Separator {
+    in property <string> orientation: "horizontal"; // "horizontal" or "vertical"
+    in property <length> thickness: 1px;
+    
+    width: root.orientation == "horizontal" ? 100% : root.thickness;
+    height: root.orientation == "horizontal" ? root.thickness : 100%;
+    
+    Rectangle {
+        width: 100%;
+        height: 100%;
+        background: Theme.palette.border;
+    }
+}

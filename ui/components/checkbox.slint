@@ -1,0 +1,73 @@
+import { Theme } from "../tokens.slint";
+
+export component Checkbox {
+    in-out property <bool> checked: false;
+    in property <string> text;
+    in property <bool> disabled: false;
+
+    callback toggled(bool);
+
+    min-height: 24px;
+    horizontal-stretch: 0;
+    vertical-stretch: 0;
+
+    states [
+        disabled when disabled: {
+            indicator.background: Theme.palette.surface;
+            indicator.border-color: Theme.palette.text_disabled;
+            txt.color: Theme.palette.text_disabled;
+        }
+        hover when touch.has-hover: {
+            indicator.border-color: Theme.palette.primary;
+            indicator.background: checked ? Theme.palette.primary.brighter(10%) : Theme.palette.hover_overlay;
+        }
+    ]
+
+    HorizontalLayout {
+        spacing: Theme.spacing.sm;
+        alignment: start;
+
+        indicator := Rectangle {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border-width: 1.5px;
+            border-color: checked ? Theme.palette.primary : Theme.palette.border;
+            background: checked ? Theme.palette.primary : transparent;
+
+            animate background { duration: 150ms; }
+            animate border-color { duration: 150ms; }
+
+            // Vector checkmark path
+            Path {
+                width: 10px;
+                height: 8px;
+                visible: root.checked;
+                stroke: Theme.palette.on_primary;
+                stroke-width: 2px;
+                
+                MoveTo { x: 0; y: 4; }
+                LineTo { x: 3.5; y: 7.5; }
+                LineTo { x: 10; y: 0; }
+            }
+        }
+
+        txt := Text {
+            text: root.text;
+            color: Theme.palette.text_primary;
+            font-family: Theme.typography.font_family;
+            font-size: Theme.typography.body_size;
+            font-weight: Theme.typography.body_weight;
+            vertical-alignment: center;
+        }
+    }
+
+    touch := TouchArea {
+        clicked => {
+            if (!root.disabled) {
+                root.checked = !root.checked;
+                root.toggled(root.checked);
+            }
+        }
+    }
+}

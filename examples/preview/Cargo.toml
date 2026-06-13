@@ -1,0 +1,8 @@
+[package]
+name = "preview"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+my-slint-kit = { path = "../.." }
+slint = "1.8"

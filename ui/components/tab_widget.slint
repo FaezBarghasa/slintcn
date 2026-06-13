@@ -1,0 +1,51 @@
+import { Theme } from "../tokens.slint";
+
+export component TabWidget {
+    in property <[string]> tabs;
+    in-out property <int> active-tab: 0;
+
+    height: 40px;
+    horizontal-stretch: 1;
+
+    HorizontalLayout {
+        spacing: Theme.spacing.xs;
+        alignment: start;
+
+        for tab[index] in root.tabs : Rectangle {
+            min-width: 80px;
+            height: 100%;
+            border-radius: 4px;
+            background: root.active-tab == index ? Theme.palette.surface_raised : transparent;
+            
+            animate background { duration: Theme.animation.fast; }
+
+            // Active underline indicator
+            if root.active-tab == index : Rectangle {
+                y: parent.height - 3px;
+                height: 3px;
+                width: 80%;
+                background: Theme.palette.primary;
+                border-radius: 1.5px;
+                x: (parent.width - self.width) / 2;
+            }
+
+            txt := Text {
+                text: tab;
+                color: root.active-tab == index ? Theme.palette.primary : Theme.palette.text_secondary;
+                font-family: Theme.typography.font_family;
+                font-size: Theme.typography.body_size;
+                font-weight: root.active-tab == index ? 700 : Theme.typography.body_weight;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+
+                animate color { duration: Theme.animation.fast; }
+            }
+
+            TouchArea {
+                clicked => {
+                    root.active-tab = index;
+                }
+            }
+        }
+    }
+}

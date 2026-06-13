@@ -1,0 +1,32 @@
+import { Theme } from "../tokens.slint";
+
+export component ProgressBar {
+    in property <float> progress: 0.0; // Value between 0.0 and 1.0
+    in property <color> progress-color: Theme.palette.primary;
+
+    height: 12px;
+    min-width: 100px;
+    horizontal-stretch: 1;
+
+    track := Rectangle {
+        width: 100%;
+        height: 100%;
+        background: Theme.palette.surface;
+        border-radius: parent.height / 2;
+        border-width: 1px;
+        border-color: Theme.palette.border;
+        clip: true;
+
+        // Active fill bar
+        Rectangle {
+            x: 0;
+            y: 0;
+            width: parent.width * Math.max(0.0, Math.min(1.0, root.progress));
+            height: 100%;
+            background: root.progress-color;
+            border-radius: parent.height / 2;
+
+            animate width { duration: 150ms; easing: ease-out; }
+        }
+    }
+}

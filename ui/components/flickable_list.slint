@@ -1,0 +1,70 @@
+import { Theme } from "../tokens.slint";
+
+export component FlickableList inherits Rectangle {
+    in property <[string]> items;
+    in property <length> item-height: 40px;
+    
+    callback item-clicked(int, string);
+
+    // Scroll offset (Flickable viewport-y is negative or 0)
+    property <length> scroll-offset: -flick.viewport-y;
+    
+    // Index of the first visible item
+    property <int> first-visible-index: Math.max(0, Math.floor(root.scroll-offset / root.item-height));
+    
+    background: Theme.palette.surface;
+    border-radius: Theme.spacing.sm;
+    border-width: 1px;
+    border-color: Theme.palette.border;
+    clip: true;
+
+    flick := Flickable {
+        width: 100%;
+        height: 100%;
+        
+        // Total virtual height of the list content
+        viewport-height: root.items.length * root.item-height;
+
+        // Container of virtualized items
+        Rectangle {
+            width: 100%;
+            height: parent.viewport-height;
+
+            // Instantiate a fixed window of 20 slots to handle screens up to 800px high
+            for slot-index in 20 : Rectangle {
+                // Determine which actual item index corresponds to this visible slot
+                property <int> item-index: root.first-visible-index + slot-index;
+                
+                // Only show if the item index is within valid bounds
+                visible: item-index < root.items.length;
+                
+                x: 0;
+                y: self.item-index * root.item-height;
+                width: 100%;
+                height: root.item-height;
+                background: touch.pressed ? Theme.palette.pressed_overlay :
+                            touch.has-hover ? Theme.palette.hover_overlay : transparent;
+
+                HorizontalLayout {
+                    padding-left: Theme.spacing.md;
+                    padding-right: Theme.spacing.md;
+                    alignment: start;
+                    
+                    Text {
+                        text: root.items[item-index];
+                        color: Theme.palette.text_primary;
+                        font-family: Theme.typography.font_family;
+                        font-size: Theme.typography.body_size;
+                        vertical-alignment: center;
+                    }
+                }
+
+                touch := TouchArea {
+                    clicked => {
+                        root.item-clicked(item-index, root.items[item-index]);
+                    }
+                }
+            }
+        }
+    }
+}

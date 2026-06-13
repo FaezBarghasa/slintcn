@@ -1,0 +1,35 @@
+[workspace]
+members = [
+    "examples/preview"
+]
+resolver = "2"
+
+[package]
+name = "my-slint-kit"
+version = "0.1.0"
+edition = "2021"
+authors = ["Antigravity"]
+
+[features]
+default = ["std"]
+std = ["slint/std"]
+no_std = []
+
+[dependencies]
+slint = "1.8"
+
+[build-dependencies]
+slint-build = "1.8"
+
+[[bench]]
+name = "layout_bench"
+harness = false
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[profile.dev.package."*"]
+opt-level = "z"

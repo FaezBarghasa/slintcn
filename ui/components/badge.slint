@@ -1,0 +1,38 @@
+import { Theme } from "../tokens.slint";
+
+export enum BadgeStatus {
+    success,
+    warning,
+    critical,
+    neutral
+}
+
+export component Badge {
+    in property <string> text;
+    in property <BadgeStatus> status: BadgeStatus.neutral;
+
+    min-height: 20px;
+
+    bg := Rectangle {
+        border-radius: 10px;
+        background: status == BadgeStatus.success ? Theme.palette.success :
+                    status == BadgeStatus.warning ? Theme.palette.warning :
+                    status == BadgeStatus.critical ? Theme.palette.critical :
+                    Theme.palette.surface_raised;
+
+        HorizontalLayout {
+            padding-left: Theme.spacing.sm;
+            padding-right: Theme.spacing.sm;
+            alignment: center;
+            
+            txt := Text {
+                text: root.text;
+                color: status == BadgeStatus.neutral ? Theme.palette.text_primary : Theme.palette.on_status;
+                font-family: Theme.typography.font_family;
+                font-size: Theme.typography.caption_size;
+                font-weight: Theme.typography.caption_weight;
+                vertical-alignment: center;
+            }
+        }
+    }
+}

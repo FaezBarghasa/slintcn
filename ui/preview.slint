@@ -1,0 +1,237 @@
+import { Theme } from "tokens.slint";
+import { Button } from "components/button.slint";
+import { Card } from "components/card.slint";
+import { Badge, BadgeStatus } from "components/badge.slint";
+import { Input } from "components/input.slint";
+import { Checkbox } from "components/checkbox.slint";
+import { Switch } from "components/switch.slint";
+import { Slider } from "components/slider.slint";
+import { RadioGroup } from "components/radio_group.slint";
+import { ProgressBar } from "components/progress_bar.slint";
+import { TabWidget } from "components/tab_widget.slint";
+import { FlickableList } from "components/flickable_list.slint";
+
+export { Button, Card, Badge, BadgeStatus, Theme, Input, Checkbox, Switch, Slider, RadioGroup, ProgressBar, TabWidget, FlickableList }
+
+export component Preview inherits Window {
+    title: "my-slint-kit showcase";
+    preferred-width: 800px;
+    preferred-height: 600px;
+    background: Theme.palette.background;
+
+    // Expose root properties for test assertions
+    in-out property <string> test_input_text: "Edit Me";
+    in-out property <bool> test_checkbox_checked: true;
+    in-out property <bool> test_switch_checked: true;
+    in-out property <float> test_slider_value: 50.0;
+    in-out property <int> test_radio_selected: 0;
+    in-out property <float> test_progress: root.test_slider_value / 100.0;
+    in-out property <int> test_tab_active <=> test_tabs.active-tab;
+    in-out property <bool> test_button_disabled: false;
+    in-out property <bool> test_button_outlined: false;
+
+    VerticalLayout {
+        padding: Theme.spacing.lg;
+        spacing: Theme.spacing.md;
+
+        // Top bar with Theme switch and TabWidget
+        HorizontalLayout {
+            spacing: Theme.spacing.md;
+            alignment: space-between;
+
+            test_tabs := TabWidget {
+                tabs: ["Interactive Form", "Layout & Grids", "Lazy Scroll List"];
+            }
+
+            Button {
+                text: Theme.is_dark ? "Switch to Light Mode" : "Switch to Dark Mode";
+                clicked => {
+                    Theme.is_dark = !Theme.is_dark;
+                }
+            }
+        }
+
+        // Segment 1: Interactive Form Controls
+        if test_tabs.active-tab == 0 : VerticalLayout {
+            spacing: Theme.spacing.md;
+            
+            HorizontalLayout {
+                spacing: Theme.spacing.lg;
+
+                // Inputs and Toggles
+                Card {
+                    width: 45%;
+                    VerticalLayout {
+                        spacing: Theme.spacing.md;
+                        Text {
+                            text: "Form Elements";
+                            color: Theme.palette.text_primary;
+                            font-size: Theme.typography.header_size;
+                            font-weight: 700;
+                        }
+
+                        Input {
+                            label: "Sample Text Input";
+                            placeholder-text: "Type here...";
+                            text <=> root.test_input_text;
+                            has-error: self.text == "";
+                            error-text: "Field cannot be empty";
+                        }
+
+                        // Spacer to prevent error text overlap
+                        Rectangle { height: 12px; }
+
+                        Checkbox {
+                            text: "Enable Slider Control";
+                            checked <=> root.test_checkbox_checked;
+                        }
+
+                        Switch {
+                            checked <=> root.test_switch_checked;
+                        }
+
+                        Text {
+                            text: "Switch state: " + (root.test_switch_checked ? "ON" : "OFF");
+                            color: Theme.palette.text_secondary;
+                        }
+                    }
+                }
+
+                // Selectors and Progress
+                Card {
+                    width: 45%;
+                    VerticalLayout {
+                        spacing: Theme.spacing.md;
+                        Text {
+                            text: "Selectors & Indicators";
+                            color: Theme.palette.text_primary;
+                            font-size: Theme.typography.header_size;
+                            font-weight: 700;
+                        }
+
+                        Text {
+                            text: "Adjust value (0-100):";
+                            color: Theme.palette.text_secondary;
+                        }
+
+                        Slider {
+                            min: 0.0;
+                            max: 100.0;
+                            value <=> root.test_slider_value;
+                            disabled: !root.test_checkbox_checked;
+                        }
+
+                        ProgressBar {
+                            progress: root.test_progress;
+                        }
+
+                        Text {
+                            text: "Value: " + Math.round(root.test_slider_value) + "%";
+                            color: Theme.palette.text_primary;
+                            font-family: "monospace";
+                        }
+
+                        RadioGroup {
+                            options: ["Option A", "Option B", "Option C"];
+                            selected-index <=> root.test_radio_selected;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Segment 2: Layout Alignments & Dynamic Grids
+        if test_tabs.active-tab == 1 : VerticalLayout {
+            spacing: Theme.spacing.lg;
+
+            // 1D space alignments (Horizontal and Vertical Box demonstrations)
+            Card {
+                VerticalLayout {
+                    spacing: Theme.spacing.sm;
+                    Text {
+                        text: "1D Layout Box Alignments";
+                        color: Theme.palette.text_primary;
+                        font-size: Theme.typography.header_size;
+                        font-weight: 700;
+                    }
+
+                    HorizontalLayout {
+                        spacing: Theme.spacing.md;
+                        alignment: space-between;
+                        
+                        Rectangle { width: 60px; height: 30px; background: Theme.palette.primary; border-radius: 4px; }
+                        Rectangle { width: 60px; height: 30px; background: Theme.palette.success; border-radius: 4px; }
+                        Rectangle { width: 60px; height: 30px; background: Theme.palette.warning; border-radius: 4px; }
+                    }
+                }
+            }
+
+            // Dynamic grid using compile-time for loops (2 rows, 3 columns)
+            Card {
+                VerticalLayout {
+                    spacing: Theme.spacing.md;
+                    Text {
+                        text: "Dynamic Scaling Grid (2x3)";
+                        color: Theme.palette.text_primary;
+                        font-size: Theme.typography.header_size;
+                        font-weight: 700;
+                    }
+
+                    VerticalLayout {
+                        spacing: Theme.spacing.md;
+                        for row in 2 : HorizontalLayout {
+                            spacing: Theme.spacing.md;
+                            for col in 3 : Rectangle {
+                                background: Theme.palette.surface;
+                                border-width: 1px;
+                                border-color: Theme.palette.border;
+                                border-radius: 6px;
+                                height: 60px;
+                                horizontal-stretch: 1;
+
+                                Text {
+                                    text: "Card " + (row * 3 + col + 1);
+                                    color: Theme.palette.text_primary;
+                                    horizontal-alignment: center;
+                                    vertical-alignment: center;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Segment 3: Virtual/Lazy Scrolling List
+        if test_tabs.active-tab == 2 : VerticalLayout {
+            spacing: Theme.spacing.md;
+            
+            Text {
+                text: "Touch-Flick Virtual List (Lazy Rendering)";
+                color: Theme.palette.text_primary;
+                font-size: Theme.typography.header_size;
+                font-weight: 700;
+            }
+            
+            Text {
+                text: "Instantiates only 20 visible slot rectangles in memory. Scroll to see lazy rendering.";
+                color: Theme.palette.text_secondary;
+            }
+
+            FlickableList {
+                height: 300px;
+                items: [
+                    "Item 1: Raspberry Pi", "Item 2: ESP32-S3", "Item 3: STM32F4",
+                    "Item 4: BeagleBone Black", "Item 5: Arduino Uno", "Item 6: Teensy 4.1",
+                    "Item 7: Orange Pi", "Item 8: Pine64", "Item 9: NVIDIA Jetson Nano",
+                    "Item 10: Odroid N2+", "Item 11: Onion Omega2", "Item 12: Particle Boron",
+                    "Item 13: Micro:bit", "Item 14: Adafruit Feather", "Item 15: SparkFun Thing",
+                    "Item 16: Wemos D1 Mini", "Item 17: Seeeduino Xiao", "Item 18: Pyboard",
+                    "Item 19: ESP8266 NodeMCU", "Item 20: BBC Micro", "Item 21: Raspberry Pi Zero",
+                    "Item 22: Raspberry Pi Pico W", "Item 23: Banana Pi", "Item 24: Rock Pi",
+                    "Item 25: ASUS Tinker Board"
+                ];
+            }
+        }
+    }
+}

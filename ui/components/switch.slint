@@ -1,0 +1,58 @@
+import { Theme } from "../tokens.slint";
+
+export component Switch {
+    in-out property <bool> checked: false;
+    in property <bool> disabled: false;
+
+    callback toggled(bool);
+
+    // Touch friendly hitbox size
+    width: 60px;
+    height: 36px;
+    horizontal-stretch: 0;
+    vertical-stretch: 0;
+
+    states [
+        disabled when disabled: {
+            track.background: Theme.palette.surface;
+            track.border-color: Theme.palette.text_disabled;
+            thumb.background: Theme.palette.text_disabled;
+        }
+        hover when touch.has-hover: {
+            track.background: checked ? Theme.palette.primary.brighter(10%) : Theme.palette.hover_overlay;
+        }
+    ]
+
+    track := Rectangle {
+        width: 48px;
+        height: 24px;
+        border-radius: 12px;
+        border-width: 1.5px;
+        border-color: checked ? Theme.palette.primary : Theme.palette.border;
+        background: checked ? Theme.palette.primary : transparent;
+
+        animate background { duration: Theme.animation.fast; }
+        animate border-color { duration: Theme.animation.fast; }
+
+        thumb := Rectangle {
+            x: checked ? (parent.width - self.width - 2px) : 2px;
+            y: 2px;
+            width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            background: checked ? Theme.palette.on_primary : Theme.palette.text_secondary;
+
+            animate x { duration: Theme.animation.fast; easing: cubic-bezier(0.4, 0.0, 0.2, 1); }
+            animate background { duration: Theme.animation.fast; }
+        }
+    }
+
+    touch := TouchArea {
+        clicked => {
+            if (!root.disabled) {
+                root.checked = !root.checked;
+                root.toggled(root.checked);
+            }
+        }
+    }
+}

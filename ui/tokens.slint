@@ -1,0 +1,88 @@
+export struct PaletteData {
+    background: color,
+    surface: color,
+    surface_raised: color,
+    text_primary: color,
+    text_secondary: color,
+    text_disabled: color,
+    primary: color,
+    on_primary: color,
+    success: color,
+    warning: color,
+    critical: color,
+    on_status: color,
+    border: color,
+    hover_overlay: color,
+    pressed_overlay: color,
+}
+
+export struct SpacingData {
+    xs: length,
+    sm: length,
+    md: length,
+    lg: length,
+    xl: length,
+}
+
+export struct TypographyData {
+    font_family: string,
+    header_size: length,
+    header_weight: int,
+    body_size: length,
+    body_weight: int,
+    caption_size: length,
+    caption_weight: int,
+}
+
+export struct AnimationData {
+    fast: duration,
+    normal: duration,
+    slow: duration,
+}
+
+export global Theme {
+    in-out property <bool> is_dark: false;
+    in-out property <bool> enable_high_fidelity: true;
+
+    out property <PaletteData> palette: {
+        background: root.is_dark ? #121212 : #FFFFFF,
+        surface: root.is_dark ? #1E1E1E : #F5F5F5,
+        surface_raised: root.is_dark ? #2C2C2C : #FFFFFF,
+        text_primary: root.is_dark ? #FFFFFF : #000000,
+        text_secondary: root.is_dark ? #A0A0A0 : #666666,
+        text_disabled: root.is_dark ? #606060 : #999999,
+        primary: root.is_dark ? #BB86FC : #6200EE,
+        on_primary: #FFFFFF,
+        success: root.is_dark ? #03DAC6 : #00C853,
+        warning: root.is_dark ? #FFB300 : #FFAB00,
+        critical: root.is_dark ? #CF6679 : #D50000,
+        on_status: #000000,
+        border: root.is_dark ? #333333 : #E0E0E0,
+        hover_overlay: root.is_dark ? rgba(255, 255, 255, 0.08) : rgba(0, 0, 0, 0.04),
+        pressed_overlay: root.is_dark ? rgba(255, 255, 255, 0.12) : rgba(0, 0, 0, 0.12),
+    };
+
+    out property <SpacingData> spacing: {
+        xs: 4px,
+        sm: 8px,
+        md: 16px,
+        lg: 24px,
+        xl: 32px,
+    };
+
+    out property <TypographyData> typography: {
+        font_family: "sans-serif",
+        header_size: 24px,
+        header_weight: 700,
+        body_size: 16px,
+        body_weight: 400,
+        caption_size: 12px,
+        caption_weight: 400,
+    };
+
+    in-out property <AnimationData> animation: {
+        fast: 150ms,
+        normal: 250ms,
+        slow: 400ms,
+    };
+}

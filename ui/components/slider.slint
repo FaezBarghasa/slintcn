@@ -1,0 +1,66 @@
+import { Theme } from "../tokens.slint";
+
+export component Slider {
+    in-out property <float> value: 0.0;
+    in property <float> min: 0.0;
+    in property <float> max: 100.0;
+    in property <bool> disabled: false;
+
+    callback changed(float);
+
+    height: 36px;
+    min-width: 150px;
+    horizontal-stretch: 1;
+
+    // Track container
+    track := Rectangle {
+        y: (parent.height - self.height) / 2;
+        height: 6px;
+        background: Theme.palette.surface;
+        border-radius: 3px;
+        border-width: 1px;
+        border-color: Theme.palette.border;
+
+        // Active track fill (proportional to value)
+        Rectangle {
+            x: 0;
+            y: 0;
+            width: parent.width * (Math.max(0.0, Math.min(1.0, (root.value - root.min) / (root.max - root.min))));
+            height: 100%;
+            background: root.disabled ? Theme.palette.text_disabled : Theme.palette.primary;
+            border-radius: 3px;
+        }
+
+        // Thumb handle
+        thumb := Rectangle {
+            x: parent.width * (Math.max(0.0, Math.min(1.0, (root.value - root.min) / (root.max - root.min)))) - self.width / 2;
+            y: (parent.height - self.height) / 2;
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            background: root.disabled ? Theme.palette.text_disabled : 
+                        touch.pressed ? Theme.palette.primary.darker(20%) : 
+                        touch.has-hover ? Theme.palette.primary.brighter(10%) : Theme.palette.primary;
+            border-width: 2px;
+            border-color: Theme.palette.on_primary;
+
+            animate background { duration: 150ms; }
+        }
+    }
+
+    touch := TouchArea {
+        enabled: !root.disabled;
+        moved => {
+            if (self.pressed) {
+                let fraction = Math.max(0.0, Math.min(1.0, self.mouse-x / parent.width));
+                root.value = root.min + fraction * (root.max - root.min);
+                root.changed(root.value);
+            }
+        }
+        clicked => {
+            let fraction = Math.max(0.0, Math.min(1.0, self.mouse-x / parent.width));
+            root.value = root.min + fraction * (root.max - root.min);
+            root.changed(root.value);
+        }
+    }
+}
