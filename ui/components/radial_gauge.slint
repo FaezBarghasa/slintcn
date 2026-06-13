@@ -1,0 +1,98 @@
+import { Theme } from "../tokens.slint";
+
+export component RadialGauge {
+    in property <float> value: 0.0; // 0.0 to 1.0
+    in property <float> min-value: 0.0;
+    in property <float> max-value: 100.0;
+    in property <string> label: "SPEED";
+    in property <string> unit: "km/h";
+    in property <brush> accent-brush: Theme.palette.primary;
+
+    width: 160px;
+    height: 160px;
+
+    property <angle> start-angle: -135deg;
+    property <angle> end-angle: 135deg;
+    property <angle> current-angle: start-angle + value * (end-angle - start-angle);
+
+    property <length> center-x: root.width / 2;
+    property <length> center-y: root.height / 2;
+
+    // Background track ring
+    Rectangle {
+        width: 100%;
+        height: 100%;
+        border-radius: parent.width / 2;
+        border-width: 8px;
+        border-color: Theme.palette.border;
+        background: Theme.palette.surface;
+    }
+
+    // Dial Ticks (10 segments)
+    for i in 10 : Rectangle {
+        property <angle> tick-angle: root.start-angle + i * (root.end-angle - root.start-angle) / 9;
+        
+        x: root.center-x + 62px * Math.sin(tick-angle) - self.width / 2;
+        y: root.center-y - 62px * Math.cos(tick-angle) - self.height / 2;
+        
+        width: 4px;
+        height: 4px;
+        border-radius: 2px;
+        
+        property <bool> active: root.value >= (i / 9.0);
+        background: active ? root.accent-brush : Theme.palette.border;
+    }
+
+    // Needle path using coordinates
+    Path {
+        width: 100%;
+        height: 100%;
+        stroke: Theme.palette.critical;
+        stroke-width: 3px;
+
+        // Start at center, end at tick radius
+        property <length> needle-len: 50px;
+        property <length> tip-x: root.center-x + needle-len * Math.sin(root.current-angle);
+        property <length> tip-y: root.center-y - needle-len * Math.cos(root.current-angle);
+
+        MoveTo {
+            x: root.center-x;
+            y: root.center-y;
+        }
+        LineTo {
+            x: self.tip-x;
+            y: self.tip-y;
+        }
+    }
+
+    // Central Cap
+    Rectangle {
+        width: 12px;
+        height: 12px;
+        border-radius: 6px;
+        background: Theme.palette.text_primary;
+        x: root.center-x - self.width / 2;
+        y: root.center-y - self.height / 2;
+    }
+
+    // Central value/label layout
+    VerticalLayout {
+        padding-top: 90px;
+        spacing: 2px;
+        
+        Text {
+            text: Math.round(root.min-value + root.value * (root.max-value - root.min-value));
+            font-size: Theme.typography.body_size;
+            font-weight: Theme.typography.header_weight;
+            color: Theme.palette.text_primary;
+            horizontal-alignment: center;
+        }
+        
+        Text {
+            text: root.label + " " + root.unit;
+            font-size: Theme.typography.caption_size;
+            color: Theme.palette.text_secondary;
+            horizontal-alignment: center;
+        }
+    }
+}

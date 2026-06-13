@@ -1,0 +1,41 @@
+import { Theme } from "../tokens.slint";
+
+export component Led {
+    in property <bool> active: false;
+    in property <color> led-color: #ff0000;
+    in property <string> label: "";
+
+    VerticalLayout {
+        alignment: center;
+        spacing: Theme.spacing.xs;
+
+        Rectangle {
+            width: 24px;
+            height: 24px;
+            border-radius: 12px;
+            border-width: 2px;
+            border-color: root.active ? root.led-color.brighter(0.5) : Theme.palette.border;
+            background: root.active ? root.led-color : root.led-color.darker(0.6);
+
+            Rectangle {
+                x: 4px;
+                y: 4px;
+                width: 6px;
+                height: 6px;
+                border-radius: 3px;
+                background: rgba(255, 255, 255, 0.4);
+            }
+
+            drop-shadow-color: root.active ? root.led-color : transparent;
+            drop-shadow-blur: root.active ? 8px : 0px;
+        }
+
+        if (root.label != "") : Text {
+            text: root.label;
+            font-family: Theme.typography.font_family;
+            font-size: Theme.typography.caption_size;
+            color: Theme.palette.text_secondary;
+            horizontal-alignment: center;
+        }
+    }
+}

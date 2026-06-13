@@ -1,0 +1,72 @@
+import { Theme } from "../tokens.slint";
+
+export component Spinner {
+    in property <length> size: 40px;
+    in property <length> stroke-width: 4px;
+    in property <brush> active-brush: Theme.palette.primary;
+    
+    width: size;
+    height: size;
+
+    Rectangle {
+        width: 100%;
+        height: 100%;
+        
+        // Background track ring
+        Rectangle {
+            width: 100%;
+            height: 100%;
+            border-radius: parent.width / 2;
+            border-width: root.stroke-width;
+            border-color: Theme.palette.border;
+        }
+
+        // Animated rotating arc inside a rotating container
+        rotator := Rectangle {
+            width: 100%;
+            height: 100%;
+            
+            // Slint supports rotating any element
+            // We rotate this container to animate the arc
+            // rotation-angle is supported in newer Slint versions,
+            // or we can animate a custom property and bind it to layout transforms.
+            // But let's use a standard property and rotation angle.
+            
+            property <angle> angle: 0deg;
+
+            // Loop rotation
+            animate angle {
+                duration: 1000ms;
+                iteration-count: -1;
+            }
+
+            // We can set the default angle to 360deg to trigger the loop
+            init => {
+                self.angle = 360deg;
+            }
+
+            Path {
+                width: 100%;
+                height: 100%;
+                stroke: root.active-brush;
+                stroke-width: root.stroke-width;
+                
+                property <length> radius: (parent.width - root.stroke-width) / 2;
+                property <length> center-x: parent.width / 2;
+                property <length> center-y: parent.height / 2;
+
+                MoveTo {
+                    x: center-x;
+                    y: center-y - radius;
+                }
+                ArcTo {
+                    radius-x: radius;
+                    radius-y: radius;
+                    x: center-x + radius;
+                    y: center-y;
+                    sweep: true;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,75 @@
+import { Theme } from "../tokens.slint";
+
+export component Roller {
+    in property <[string]> options: [];
+    in-out property <int> selected-index: 0;
+
+    callback selected(int, string);
+
+    width: 120px;
+    height: 120px;
+
+    Rectangle {
+        width: 100%;
+        height: 100%;
+        background: Theme.palette.surface;
+        border-radius: Theme.spacing.sm;
+        border-width: 1px;
+        border-color: Theme.palette.border;
+        clip: true;
+
+        TouchArea {
+            clicked => {
+                if (self.pressed-y < parent.height / 3) {
+                    if (root.selected-index > 0) {
+                        root.selected-index -= 1;
+                        root.selected(root.selected-index, root.options[root.selected-index]);
+                    }
+                } else if (self.pressed-y > parent.height * 2 / 3) {
+                    if (root.selected-index < root.options.length - 1) {
+                        root.selected-index += 1;
+                        root.selected(root.selected-index, root.options[root.selected-index]);
+                    }
+                }
+            }
+
+            VerticalLayout {
+                padding-top: Theme.spacing.sm;
+                padding-bottom: Theme.spacing.sm;
+                alignment: center;
+                spacing: Theme.spacing.xs;
+
+                if (root.selected-index > 0) : Text {
+                    text: root.options[root.selected-index - 1];
+                    font-size: Theme.typography.caption_size;
+                    color: Theme.palette.text_disabled;
+                    horizontal-alignment: center;
+                    opacity: 0.5;
+                }
+
+                Rectangle {
+                    height: 36px;
+                    background: Theme.palette.hover_overlay;
+                    border-radius: Theme.spacing.xs;
+                    
+                    Text {
+                        text: root.options.length > 0 ? root.options[root.selected-index] : "";
+                        font-size: Theme.typography.body_size;
+                        font-weight: Theme.typography.header_weight;
+                        color: Theme.palette.primary;
+                        horizontal-alignment: center;
+                        vertical-alignment: center;
+                    }
+                }
+
+                if (root.selected-index < root.options.length - 1) : Text {
+                    text: root.options[root.selected-index + 1];
+                    font-size: Theme.typography.caption_size;
+                    color: Theme.palette.text_disabled;
+                    horizontal-alignment: center;
+                    opacity: 0.5;
+                }
+            }
+        }
+    }
+}

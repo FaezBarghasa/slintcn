@@ -1,0 +1,36 @@
+import { Theme } from "../tokens.slint";
+import { Button } from "button.slint";
+
+export component ButtonMatrix {
+    in property <[string]> buttons: [];
+    in property <int> cols: 3;
+    
+    callback clicked(int, string);
+
+    width: 100%;
+
+    VerticalLayout {
+        spacing: Theme.spacing.xs;
+
+        property <int> rows: Math.ceil(buttons.length / cols);
+
+        for row-idx in root.rows : HorizontalLayout {
+            spacing: Theme.spacing.xs;
+            
+            for col-idx in root.cols : Rectangle {
+                property <int> btn-idx: row-idx * root.cols + col-idx;
+                
+                visible: btn-idx < root.buttons.length;
+                horizontal-stretch: 1;
+
+                if (btn-idx < root.buttons.length) : Button {
+                    width: 100%;
+                    text: root.buttons[btn-idx];
+                    clicked => {
+                        root.clicked(btn-idx, root.buttons[btn-idx]);
+                    }
+                }
+            }
+        }
+    }
+}
