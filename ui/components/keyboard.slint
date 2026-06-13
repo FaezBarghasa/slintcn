@@ -1,0 +1,119 @@
+// =================================================================================
+//  Virtual Keyboard Widget
+//  A QWERTY keyboard for on-screen text input.
+// =================================================================================
+
+import { Theme } from "../tokens.slint";
+
+// Internal component for a single key on the keyboard.
+component Key inherits Rectangle {
+    in property <string> text;
+    in property <bool> special: false; // For non-character keys like Shift, Enter, etc.
+    callback clicked(string);
+    
+    horizontal-stretch: 1;
+    height: 48px; // Ensure keys are a minimum touch target size.
+    
+    background: self.special ? Theme.palette.surface_raised : Theme.palette.surface;
+    border-radius: Theme.spacing.xs;
+    border-width: 1px;
+    border-color: Theme.palette.border;
+
+    TouchArea {
+        clicked => { root.clicked(root.text); }
+    }
+    
+    Text {
+        text: root.text;
+        color: Theme.palette.text_primary;
+        font-family: Theme.typography.font_family;
+        font-size: Theme.typography.body_size;
+        font-weight: 500;
+        vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+}
+
+// The main virtual keyboard component.
+export component VirtualKeyboard inherits Rectangle {
+    // Callback invoked when any key is pressed.
+    callback key-pressed(string);
+    
+    background: Theme.palette.surface;
+    height: 240px;
+    
+    VerticalLayout {
+        padding: Theme.spacing.sm;
+        spacing: Theme.spacing.sm;
+        alignment: center;
+        
+        // Row 1: QWERTYUIOP
+        HorizontalLayout {
+            spacing: Theme.spacing.xs;
+            for key in ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"] : Key {
+                text: key;
+                clicked(k) => { root.key-pressed(k); }
+            }
+        }
+        
+        // Row 2: ASDFGHJKL
+        HorizontalLayout {
+            spacing: Theme.spacing.xs;
+            padding-left: 20px;
+            padding-right: 20px;
+            for key in ["A", "S", "D", "F", "G", "H", "J", "K", "L"] : Key {
+                text: key;
+                clicked(k) => { root.key-pressed(k); }
+            }
+        }
+        
+        // Row 3: Shift, ZXCVBNM, Backspace
+        HorizontalLayout {
+            spacing: Theme.spacing.xs;
+            
+            Key {
+                text: "⇧"; // Shift
+                horizontal-stretch: 1.5;
+                special: true;
+                clicked => { root.key-pressed("SHIFT"); }
+            }
+            
+            for key in ["Z", "X", "C", "V", "B", "N", "M"] : Key {
+                text: key;
+                clicked(k) => { root.key-pressed(k); }
+            }
+            
+            Key {
+                text: "⌫"; // Backspace
+                horizontal-stretch: 1.5;
+                special: true;
+                clicked => { root.key-pressed("BACKSPACE"); }
+            }
+        }
+        
+        // Row 4: Mode, Space, Enter
+        HorizontalLayout {
+            spacing: Theme.spacing.xs;
+            
+            Key {
+                text: "123"; // Mode switch to numeric/symbols
+                horizontal-stretch: 1.5;
+                special: true;
+                clicked => { root.key-pressed("MODE"); }
+            }
+            
+            Key {
+                text: " "; // Space
+                horizontal-stretch: 5;
+                clicked => { root.key-pressed(" "); }
+            }
+            
+            Key {
+                text: "ENTER";
+                horizontal-stretch: 1.5;
+                special: true;
+                clicked => { root.key-pressed("ENTER"); }
+            }
+        }
+    }
+}

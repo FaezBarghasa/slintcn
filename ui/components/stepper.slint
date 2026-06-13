@@ -1,0 +1,140 @@
+// =================================================================================
+//  Stepper Widget
+//  A reusable control for incrementing or decrementing values.
+// =================================================================================
+
+import { Theme } from "../tokens.slint";
+import { Icons } from "../icons.slint";
+
+export component Stepper inherits Rectangle {
+    // --- Input/Output Properties ---
+    in-out property <float> value: 0.0;
+    in property <float> min: 0.0;
+    in property <float> max: 1000.0;
+    in property <float> step-size: 1.0;
+    in property <string> unit: "";
+    
+    // --- Callbacks ---
+    callback changed(float);
+    
+    // --- Internal State ---
+    property <bool> is-incrementing: false;
+    property <bool> is-decrementing: false;
+    
+    // Timer for auto-repeat when holding a button
+    timer := Timer {
+        interval: 150ms;
+        running: root.is-incrementing || root.is-decrementing;
+        triggered => {
+            if (root.is-incrementing) {
+                root.increment();
+            } else if (root.is-decrementing) {
+                root.decrement();
+            }
+        }
+    }
+    
+    // --- Functions ---
+    function increment() {
+        if (root.value + root.step-size <= root.max) {
+            root.value += root.step-size;
+            root.changed(root.value);
+        }
+    }
+    
+    function decrement() {
+        if (root.value - root.step-size >= root.min) {
+            root.value -= root.step-size;
+            root.changed(root.value);
+        }
+    }
+    
+    height: 48px;
+    background: Theme.palette.surface;
+    border-radius: Theme.spacing.sm;
+    border-width: 1px;
+    border-color: Theme.palette.border;
+
+    HorizontalLayout {
+        // Decrement Button
+        Rectangle {
+            width: 48px;
+            background: ta-down.pressed ? Theme.palette.surface_raised : transparent;
+            border-top-left-radius: Theme.spacing.sm;
+            border-bottom-left-radius: Theme.spacing.sm;
+            
+            ta-down := TouchArea {
+                pointer-event(event) => {
+                    if (event.button == PointerEventButton.left) {
+                        if (event.kind == PointerEventKind.down) {
+                            root.is-decrementing = true;
+                            root.decrement();
+                        } else if (event.kind == PointerEventKind.up || event.kind == PointerEventKind.cancel) {
+                            root.is-decrementing = false;
+                        }
+                    }
+                }
+            }
+            
+            Image {
+                source: Icons.remove;
+                width: 24px;
+                colorize: root.value > root.min ? Theme.palette.primary : Theme.palette.text_secondary;
+            }
+        }
+        
+        // Vertical Divider
+        Rectangle { width: 1px; background: Theme.palette.border; height: 60%; }
+        
+        // Value Display
+        HorizontalLayout {
+            alignment: center;
+            spacing: 4px;
+            Text {
+                text: root.value;
+                font-family: Theme.typography.font_family;
+                font-size: Theme.typography.body_size;
+                font-weight: Theme.typography.body_weight;
+                color: Theme.palette.text_primary;
+                vertical-alignment: center;
+            }
+            if root.unit != "" : Text {
+                text: root.unit;
+                font-family: Theme.typography.font_family;
+                font-size: Theme.typography.caption_size;
+                color: Theme.palette.text_secondary;
+                vertical-alignment: center;
+            }
+        }
+        
+        // Vertical Divider
+        Rectangle { width: 1px; background: Theme.palette.border; height: 60%; }
+        
+        // Increment Button
+        Rectangle {
+            width: 48px;
+            background: ta-up.pressed ? Theme.palette.surface_raised : transparent;
+            border-top-right-radius: Theme.spacing.sm;
+            border-bottom-right-radius: Theme.spacing.sm;
+            
+            ta-up := TouchArea {
+                pointer-event(event) => {
+                    if (event.button == PointerEventButton.left) {
+                        if (event.kind == PointerEventKind.down) {
+                            root.is-incrementing = true;
+                            root.increment();
+                        } else if (event.kind == PointerEventKind.up || event.kind == PointerEventKind.cancel) {
+                            root.is-incrementing = false;
+                        }
+                    }
+                }
+            }
+            
+            Image {
+                source: Icons.add;
+                width: 24px;
+                colorize: root.value < root.max ? Theme.palette.primary : Theme.palette.text_secondary;
+            }
+        }
+    }
+}

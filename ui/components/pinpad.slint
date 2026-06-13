@@ -1,0 +1,232 @@
+// =================================================================================
+//  PinPad Widget
+//  A full-screen overlay component for secure PIN entry.
+// =================================================================================
+
+import { Theme } from "../tokens.slint";
+import { Icons } from "../icons.slint";
+
+// Internal component for the individual keypad buttons.
+component PinButton inherits Rectangle {
+    in property <string> label;
+    in property <bool> is-action: false; // Differentiates number buttons from action buttons (e.g., "OK", "CLR")
+    
+    callback activated(string);
+    
+    property <bool> is-pressed: touch.pressed;
+    
+    width: 80px;
+    height: 64px;
+    background: root.is-pressed ? (root.is-action ? Theme.palette.primary.darker(0.2) : Theme.palette.surface_raised)
+                               : (root.is-action ? Theme.palette.primary : Theme.palette.surface);
+    border-radius: Theme.spacing.sm;
+    border-width: 1px;
+    border-color: root.is-action ? Theme.palette.primary : Theme.palette.border;
+    
+    animate background { duration: Theme.animation.fast; }
+    
+    Text {
+        text: root.label;
+        font-family: Theme.typography.font_family;
+        font-size: root.is-action ? Theme.typography.body_size : Theme.typography.header_size;
+        font-weight: 600;
+        color: root.is-action ? #000 : Theme.palette.text_primary;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+    
+    touch := TouchArea {
+        clicked => { root.activated(root.label); }
+    }
+}
+
+export component PinPad inherits Rectangle {
+    // --- Input Properties ---
+    in property <string> correct-pin: "1234";
+    in property <string> title: "Factory Access";
+    in property <int> max-attempts: 3;
+    
+    // --- Output Properties & Callbacks ---
+    out property <bool> authenticated: false;
+    callback auth-success();
+    callback auth-failed();
+    callback cancelled();
+    
+    // --- Internal State ---
+    property <string> entered-pin: "";
+    property <int> pin-len: 0; // Track length manually
+    property <int> attempts: 0;
+    property <bool> show-error: false;
+    property <string> error-message: "";
+    
+    // --- Layout ---
+    width: 100%;
+    height: 100%;
+    background: Theme.palette.background.with-alpha(0.95);
+    opacity: root.visible ? 1 : 0;
+    
+    animate opacity { duration: Theme.animation.normal; }
+    
+    TouchArea { enabled: root.visible; }
+    
+    if root.visible : VerticalLayout {
+        alignment: center;
+        spacing: Theme.spacing.xl;
+        
+        // Header with icon and title
+        VerticalLayout {
+            alignment: center;
+            spacing: Theme.spacing.md;
+            
+            Rectangle { // Icon background
+                width: 64px; height: 64px;
+                background: Theme.palette.primary.with-alpha(0.1);
+                border-radius: Theme.spacing.md;
+                border-width: 1px;
+                border-color: Theme.palette.primary.with-alpha(0.3);
+                
+                Image {
+                    source: Icons.lock;
+                    width: 32px;
+                    height: 32px;
+                    colorize: Theme.palette.primary;
+                }
+            }
+            Text {
+                text: root.title;
+                font-family: Theme.typography.font_family;
+                font-size: Theme.typography.header_size;
+                font-weight: 700;
+                color: Theme.palette.text_primary;
+                horizontal-alignment: center;
+            }
+            Text {
+                text: "Enter PIN to continue";
+                font-family: Theme.typography.font_family;
+                font-size: Theme.typography.body_size;
+                color: Theme.palette.text_secondary;
+                horizontal-alignment: center;
+            }
+        }
+        
+        // PIN display dots
+        Rectangle {
+            width: 300px;
+            height: 60px;
+            background: Theme.palette.surface;
+            border-radius: Theme.spacing.md;
+            border-width: 2px;
+            border-color: root.show-error ? Theme.palette.critical : Theme.palette.border;
+            animate border-color { duration: Theme.animation.fast; }
+            
+            HorizontalLayout {
+                alignment: center;
+                spacing: Theme.spacing.lg;
+                for i in 6 : Rectangle {
+                    width: 16px; height: 16px;
+                    background: i < root.pin-len ? Theme.palette.primary : Theme.palette.surface_raised;
+                    border-radius: 8px;
+                    border-width: 2px;
+                    border-color: i < root.pin-len ? Theme.palette.primary : Theme.palette.border;
+                    animate background { duration: Theme.animation.fast; }
+                }
+            }
+        }
+        
+        // Error message display area
+        if root.show-error : Text {
+            height: 24px;
+            text: root.error-message;
+            font-family: Theme.typography.font_family;
+            font-size: Theme.typography.caption_size;
+            color: Theme.palette.critical;
+            horizontal-alignment: center;
+        }
+        
+        // Keypad Grid
+        GridLayout {
+            spacing: Theme.spacing.md;
+            
+            Row {
+                PinButton { label: "1"; activated(l) => { root.append-digit(l); } }
+                PinButton { label: "2"; activated(l) => { root.append-digit(l); } }
+                PinButton { label: "3"; activated(l) => { root.append-digit(l); } }
+            }
+            Row {
+                PinButton { label: "4"; activated(l) => { root.append-digit(l); } }
+                PinButton { label: "5"; activated(l) => { root.append-digit(l); } }
+                PinButton { label: "6"; activated(l) => { root.append-digit(l); } }
+            }
+            Row {
+                PinButton { label: "7"; activated(l) => { root.append-digit(l); } }
+                PinButton { label: "8"; activated(l) => { root.append-digit(l); } }
+                PinButton { label: "9"; activated(l) => { root.append-digit(l); } }
+            }
+            Row {
+                PinButton { label: "CLR"; is-action: true; activated => { root.entered-pin = ""; root.pin-len = 0; root.show-error = false; } }
+                PinButton { label: "0"; activated(l) => { root.append-digit(l); } }
+                PinButton { label: "OK"; is-action: true; activated => { root.submit-pin(); } }
+            }
+        }
+        
+        // Cancel Button
+        Rectangle {
+            width: 280px;
+            height: 48px;
+            background: ta-cancel.pressed ? Theme.palette.surface_raised : transparent;
+            border-radius: Theme.spacing.sm;
+            border-width: 1px;
+            border-color: Theme.palette.border;
+
+            ta-cancel := TouchArea {
+                clicked => {
+                    root.entered-pin = "";
+                    root.show-error = false;
+                    root.cancelled();
+                }
+            }
+            
+            Text {
+                text: "Cancel";
+                font-family: Theme.typography.font_family;
+                font-size: Theme.typography.body_size;
+                color: Theme.palette.text_secondary;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+        }
+    }
+
+    // --- Logic Functions ---
+
+    function append-digit(digit: string) {
+        if (root.pin-len < 6) {
+            root.entered-pin = root.entered-pin + digit;
+            root.pin-len += 1;
+            root.show-error = false;
+        }
+    }
+    
+    function submit-pin() {
+        if (root.entered-pin == root.correct-pin) {
+            root.authenticated = true;
+            root.entered-pin = "";
+            root.pin-len = 0;
+            root.attempts = 0;
+            root.auth-success();
+        } else {
+            root.attempts += 1;
+            root.show-error = true;
+            
+            if (root.attempts >= root.max-attempts) {
+                root.error-message = "Access denied. Too many attempts.";
+                root.auth-failed();
+            } else {
+                root.error-message = @tr("Incorrect PIN. {} attempts remaining.", root.max-attempts - root.attempts);
+            }
+            
+            root.entered-pin = "";
+            root.pin-len = 0;
+        }
+    }
+}

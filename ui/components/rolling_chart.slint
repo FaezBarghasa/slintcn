@@ -1,0 +1,94 @@
+// =================================================================================
+//  Rolling Chart Widget
+//  A performant line chart that displays a rolling history of data points.
+// =================================================================================
+
+import { Theme } from "../tokens.slint";
+
+export component RollingChart inherits Rectangle {
+    // --- Input Properties ---
+    in property <[float]> data-set: [0.0, 0.0];
+    in property <float> min-y: 0.0;
+    in property <float> max-y: 100.0;
+    in property <color> line-color: Theme.palette.primary;
+
+    clip: true;
+    
+    // --- Internal Calculation Properties ---
+    property <float> range: max(1.0, root.max-y - root.min-y);
+    property <float> h: root.height / 1px;
+    property <float> w: root.width / 1px;
+    property <int> len: root.data-set.length;
+    property <int> last-idx: max(0, root.len - 1);
+    property <float> safe-first: root.len > 0 ? root.data-set[0] : root.min-y;
+
+    Path {
+        stroke: root.line-color;
+        stroke-width: 2px;
+
+        MoveTo {
+            x: 0;
+            y: root.h - (((root.safe-first - root.min-y) / root.range) * root.h);
+        }
+
+        LineTo { x: (1.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(1, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (2.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(2, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (3.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(3, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (4.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(4, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (5.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(5, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (6.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(6, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (7.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(7, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (8.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(8, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (9.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(9, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (10.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(10, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (11.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(11, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (12.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(12, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (13.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(13, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (14.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(14, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (15.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(15, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (16.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(16, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (17.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(17, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (18.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(18, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (19.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(19, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (20.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(20, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (21.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(21, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (22.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(22, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (23.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(23, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (24.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(24, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (25.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(25, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (26.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(26, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (27.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(27, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (28.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(28, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (29.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(29, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (30.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(30, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (31.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(31, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (32.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(32, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (33.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(33, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (34.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(34, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (35.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(35, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (36.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(36, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (37.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(37, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (38.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(38, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (39.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(39, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (40.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(40, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (41.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(41, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (42.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(42, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (43.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(43, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (44.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(44, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (45.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(45, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (46.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(46, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (47.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(47, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (48.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(48, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (49.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(49, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (50.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(50, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (51.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(51, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (52.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(52, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (53.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(53, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (54.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(54, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (55.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(55, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (56.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(56, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (57.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(57, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (58.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(58, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        LineTo { x: (59.0 / 59.0) * root.w; y: root.h - (((root.data-set[min(59, root.last-idx)] - root.min-y) / root.range) * root.h); }
+    }
+}

@@ -74,7 +74,7 @@ export component Preview inherits Window {
             alignment: space-between;
 
             test_tabs := TabWidget {
-                tabs: ["Interactive Form", "Layout & Grids", "Lazy Scroll List", "Shadcn Core"];
+                tabs: ["Interactive Form", "Layout & Grids", "Lazy Scroll List", "Shadcn Core", "LVGL & HMI"];
             }
 
             Button {
@@ -381,6 +381,102 @@ export component Preview inherits Window {
                                 ["Pending", "user2@example.com", "$150.00"],
                                 ["Unpaid", "user3@example.com", "$350.00"],
                             ];
+                        }
+                    }
+                }
+            }
+        }
+
+        // Segment 5: LVGL & HMI Controls
+        if test_tabs.active-tab == 4 : VerticalLayout {
+            spacing: Theme.spacing.md;
+            
+            HorizontalLayout {
+                spacing: Theme.spacing.lg;
+
+                Card {
+                    title: "LVGL Components";
+                    description: "Arc, LED, Roller, ButtonMatrix, Spinner";
+                    
+                    VerticalLayout {
+                        spacing: Theme.spacing.md;
+                        
+                        HorizontalLayout {
+                            alignment: space-around;
+                            Arc { value: 0.7; }
+                            Led { active: true; led-color: #00ff00; label: "Run"; }
+                            Spinner { size: 30px; }
+                        }
+                        
+                        Separator {}
+                        
+                        ButtonMatrix {
+                            buttons: ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+                            cols: 3;
+                        }
+                        
+                        Separator {}
+                        
+                        Roller {
+                            options: ["Option A", "Option B", "Option C", "Option D"];
+                            selected-index: 1;
+                        }
+                    }
+                }
+
+                Card {
+                    title: "HMI & Circular Display";
+                    description: "RadialGauge, Scale, CircularLayout";
+                    
+                    VerticalLayout {
+                        spacing: Theme.spacing.md;
+                        alignment: center;
+                        
+                        RadialGauge {
+                            value: 0.65;
+                            min-value: 0.0;
+                            max-value: 200.0;
+                            label: "SPEED";
+                            unit: "km/h";
+                        }
+                        
+                        Separator {}
+                        
+                        Scale {
+                            tick-count: 8;
+                            orientation: "horizontal";
+                        }
+                        
+                        Separator {}
+
+                        CircularLayout {
+                            radius: 50px;
+                            Rectangle {
+                                x: 15px; y: 15px; width: 20px; height: 20px;
+                                background: Theme.palette.primary;
+                                border-radius: 10px;
+                            }
+                            Rectangle {
+                                x: 65px; y: 15px; width: 20px; height: 20px;
+                                background: Theme.palette.success;
+                                border-radius: 10px;
+                            }
+                        }
+                    }
+                }
+
+                Card {
+                    title: "Embedded Charts";
+                    description: "High-performance rolling line chart";
+                    
+                    VerticalLayout {
+                        spacing: Theme.spacing.md;
+                        
+                        Chart {
+                            height: 150px;
+                            data-set: [10.0, 20.0, 15.0, 35.0, 40.0, 30.0, 45.0, 60.0, 55.0, 70.0, 80.0, 75.0, 90.0, 85.0, 95.0, 80.0, 60.0, 40.0, 30.0, 50.0];
+                            min-y: 0.0;
+                            max-y: 100.0;
                         }
                     }
                 }

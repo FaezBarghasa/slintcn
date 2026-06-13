@@ -1,0 +1,174 @@
+// =================================================================================
+//  Split Chart Widget
+//  A reusable chart component that combines a header with a title and current value
+//  display, and a chart area that shows historical data.
+// =================================================================================
+
+import { Theme } from "../tokens.slint";
+import { RollingChart } from "rolling_chart.slint";
+
+export component SplitChart inherits Rectangle {
+    // --- Input Properties ---
+    in property <string> title: "Temperature";
+    in property <string> unit: "°C";
+    in property <color> line-color: Theme.palette.primary;
+    in property <float> current-value: 0.0;
+    in property <float> min-value: 0.0;
+    in property <float> max-value: 100.0;
+    
+    in property <[float]> history-data: [];
+    
+    // --- Internal Properties ---
+    property <float> value-range: max(1.0, root.max-value - root.min-value);
+    
+    // Chart area padding
+    property <length> chart-padding-left: 50px;
+    property <length> chart-padding-right: 16px;
+    property <length> chart-padding-top: 40px;
+    property <length> chart-padding-bottom: 24px;
+
+    // Interaction state for the hairline cursor
+    property <bool> show-cursor: false;
+    property <float> cursor-x-norm: 0.0;
+    property <float> cursor-value: 0.0;
+    
+    background: Theme.palette.surface;
+    border-radius: Theme.spacing.md;
+    border-width: 1px;
+    border-color: root.line-color.with-alpha(0.2);
+    clip: true;
+    
+    // --- Header ---
+    HorizontalLayout {
+        padding: Theme.spacing.md;
+        alignment: space-between;
+        
+        HorizontalLayout {
+            spacing: Theme.spacing.sm;
+            Rectangle { width: 8px; height: 8px; background: root.line-color; border-radius: 4px; }
+            Text {
+                text: root.title;
+                font-family: Theme.typography.font_family;
+                font-size: Theme.typography.body_size;
+                font-weight: Theme.typography.body_weight;
+                color: Theme.palette.text_secondary;
+                vertical-alignment: center;
+            }
+        }
+        
+        // Current value badge
+        Rectangle {
+            height: 24px;
+            background: root.line-color.with-alpha(0.1);
+            border-radius: 9999px;
+            border-width: 1px;
+            border-color: root.line-color.with-alpha(0.3);
+            padding-left: 8px;
+            padding-right: 8px;
+            
+            HorizontalLayout {
+                alignment: center;
+                spacing: 2px;
+                Text {
+                    text: root.show-cursor ? round(root.cursor-value * 10.0) / 10.0 : round(root.current-value * 10.0) / 10.0;
+                    font-family: Theme.typography.font_family;
+                    font-size: Theme.typography.body_size;
+                    font-weight: 700;
+                    color: root.line-color;
+                }
+                Text {
+                    text: root.unit;
+                    font-family: Theme.typography.font_family;
+                    font-size: Theme.typography.caption_size;
+                    color: root.line-color.with-alpha(0.7);
+                }
+            }
+        }
+    }
+    
+    // --- Chart Area ---
+    Rectangle {
+        x: root.chart-padding-left;
+        y: root.chart-padding-top;
+        width: parent.width - root.chart-padding-left - root.chart-padding-right;
+        height: parent.height - root.chart-padding-top - root.chart-padding-bottom;
+        background: Theme.palette.background.with-alpha(0.5);
+        border-radius: Theme.spacing.xs;
+        clip: true;
+
+        // --- Grid Lines ---
+        for i in 5 : Rectangle { y: (parent.height / 5) * i; width: 100%; height: 1px; background: Theme.palette.border.with-alpha(0.3); }
+        for i in 6 : Rectangle { x: (parent.width / 6) * i; height: 100%; width: 1px; background: Theme.palette.border.with-alpha(0.3); }
+        
+        RollingChart {
+            data-set: root.history-data;
+            min-y: root.min-value;
+            max-y: root.max-value;
+            line-color: root.line-color;
+        }
+
+        // --- Hairline Cursor ---
+        TouchArea {
+            moved => {
+                root.show-cursor = true;
+                root.cursor-x-norm = clamp(self.mouse-x / self.width, 0.0, 1.0);
+                let idx = floor(root.cursor-x-norm * (root.history-data.length - 1));
+                if (idx >= 0 && idx < root.history-data.length) {
+                    root.cursor-value = root.history-data[idx];
+                }
+            }
+            pointer-event(event) => {
+                if (event.kind == PointerEventKind.up || event.kind == PointerEventKind.cancel) {
+                     root.show-cursor = false;
+                }
+            }
+        }
+        
+        if root.show-cursor : Rectangle {
+            x: root.cursor-x-norm * parent.width;
+            width: 1px;
+            height: 100%;
+            background: Theme.palette.text_primary;
+        }
+        
+        if !root.show-cursor : Rectangle {
+            x: parent.width - 4px;
+            y: parent.height - (((root.current-value - root.min-value) / root.value-range) * parent.height) - 4px;
+            width: 8px;
+            height: 8px;
+            background: root.line-color;
+            border-radius: 4px;
+            border-width: 2px;
+            border-color: Theme.palette.background;
+            animate y { duration: Theme.animation.fast; }
+        }
+    }
+    
+    // --- Y-Axis Labels ---
+    for i in 5 : Text {
+        x: 8px;
+        y: root.chart-padding-top + ((parent.height - root.chart-padding-top - root.chart-padding-bottom) / 5) * i - 8px;
+        text: round(root.max-value - (root.value-range / 5.0) * i);
+        font-family: Theme.typography.font_family;
+        font-size: Theme.typography.caption_size;
+        color: Theme.palette.text_secondary;
+    }
+    
+    // --- X-Axis Labels ---
+    Text {
+        x: parent.width - 40px;
+        y: parent.height - 16px;
+        text: "now";
+        font-family: Theme.typography.font_family;
+        font-size: Theme.typography.caption_size;
+        color: Theme.palette.text_secondary;
+    }
+    Text {
+        x: root.chart-padding-left;
+        y: parent.height - 16px;
+        text: "-60s";
+        font-family: Theme.typography.font_family;
+        font-size: Theme.typography.caption_size;
+        color: Theme.palette.text_secondary;
+    }
+}

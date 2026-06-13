@@ -1,0 +1,70 @@
+// =================================================================================
+//  Gauge Widget (Simplified)
+//  A basic gauge component for displaying a value.
+// =================================================================================
+
+import { Theme } from "../tokens.slint";
+
+export component Gauge inherits Rectangle {
+    // --- Input Properties ---
+    in property <float> value: 0;
+    in property <float> min: 0;
+    in property <float> max: 100;
+    in property <string> label: "TEMP";
+    in property <string> unit: "°C";
+
+    width: 150px;
+    height: 150px;
+    background: Theme.palette.surface;
+    border-radius: Theme.spacing.sm;
+
+    // --- Background Arc ---
+    Path {
+        stroke: Theme.palette.surface_raised;
+        stroke-width: 10px;
+
+        MoveTo { x: 20px; y: 130px; }
+        ArcTo {
+            radius-x: 55px; radius-y: 55px;
+            x: 130px; y: 130px;
+            sweep: true;
+            large-arc: false;
+        }
+    }
+
+    // --- Active Arc (Static Placeholder) ---
+    Path {
+        stroke: Theme.palette.primary;
+        stroke-width: 10px;
+
+        MoveTo { x: 20px; y: 130px; }
+        ArcTo {
+            radius-x: 55px; radius-y: 55px;
+            x: 75px; y: 25px; // Static endpoint
+            sweep: true;
+            large-arc: false;
+        }
+    }
+
+    // --- Central Text Display ---
+    VerticalLayout {
+        alignment: center;
+        spacing: 2px;
+
+        Text {
+            text: root.label;
+            color: Theme.palette.text_secondary;
+            font-family: Theme.typography.font_family;
+            font-size: Theme.typography.caption_size;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: @tr("{}{}", round(root.value), root.unit);
+            color: Theme.palette.text_primary;
+            font-family: Theme.typography.font_family;
+            font-size: Theme.typography.header_size;
+            font-weight: Theme.typography.header_weight;
+            horizontal-alignment: center;
+        }
+    }
+}
