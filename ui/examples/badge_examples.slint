@@ -1,0 +1,84 @@
+import { Badge, BadgeStatus } from "../components/badge.slint";
+import { Card } from "../components/card.slint";
+import { Theme } from "../tokens.slint";
+
+export component BadgeExamples inherits Rectangle {
+    in property <bool> active: true;
+
+    VerticalLayout {
+        padding: Theme.spacing.lg;
+        spacing: Theme.spacing.xl;
+        alignment: start;
+
+        // Example 1: Basic Badges
+        Card {
+            VerticalLayout {
+                spacing: Theme.spacing.md;
+                Text { text: "1. Badge Statuses"; font-weight: Theme.typography.header_weight; }
+                
+                HorizontalLayout {
+                    spacing: Theme.spacing.md;
+                    alignment: start;
+                    Badge { text: "Neutral"; }
+                    Badge { text: "Success"; status: BadgeStatus.success; }
+                    Badge { text: "Warning"; status: BadgeStatus.warning; }
+                    Badge { text: "Critical"; status: BadgeStatus.critical; }
+                }
+            }
+        }
+
+        // Example 2: Notifications / Indicators
+        Card {
+            VerticalLayout {
+                spacing: Theme.spacing.md;
+                Text { text: "2. Notification Badges"; font-weight: Theme.typography.header_weight; }
+                
+                HorizontalLayout {
+                    spacing: Theme.spacing.xl;
+                    alignment: start;
+                    
+                    // Simulated Button with Badge
+                    Rectangle {
+                        width: 120px;
+                        height: 40px;
+                        background: Theme.palette.surface_raised;
+                        border-radius: Theme.spacing.sm;
+                        border-width: 1px;
+                        border-color: Theme.palette.border;
+                        
+                        Text { text: "Messages"; vertical-alignment: center; x: 10px; }
+                        
+                        Badge {
+                            x: parent.width - self.width - 5px;
+                            y: (parent.height - self.height) / 2;
+                            text: "5 New";
+                            status: BadgeStatus.critical;
+                        }
+                    }
+                    
+                    // Simulated Icon with Dot
+                    Rectangle {
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 20px;
+                        background: Theme.palette.surface_raised;
+                        border-width: 1px;
+                        border-color: Theme.palette.border;
+                        
+                        Text { text: "🔔"; horizontal-alignment: center; vertical-alignment: center; }
+                        
+                        // Just a small dot badge
+                        Rectangle {
+                            x: 25px;
+                            y: 5px;
+                            width: 12px;
+                            height: 12px;
+                            border-radius: 6px;
+                            background: Theme.palette.critical;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

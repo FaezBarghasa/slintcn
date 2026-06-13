@@ -1,0 +1,107 @@
+import { Arc } from "../components/arc.slint";
+import { Card } from "../components/card.slint";
+import { Theme } from "../tokens.slint";
+
+export component ArcExamples inherits Rectangle {
+    in property <bool> active: true;
+
+    VerticalLayout {
+        padding: Theme.spacing.lg;
+        spacing: Theme.spacing.xl;
+        alignment: start;
+
+        // Example 1: Basic Arc
+        Card {
+            VerticalLayout {
+                spacing: Theme.spacing.md;
+                Text { text: "1. Basic Arc (Default Settings)"; font-weight: Theme.typography.header_weight; }
+                
+                HorizontalLayout {
+                    alignment: start;
+                    Arc { value: 0.7; }
+                }
+            }
+        }
+
+        // Example 2: Dynamic Arc
+        Card {
+            VerticalLayout {
+                spacing: Theme.spacing.md;
+                Text { text: "2. Dynamic Value & Custom Angles"; font-weight: Theme.typography.header_weight; }
+                
+                property <float> current-val: 0.5;
+                
+                HorizontalLayout {
+                    spacing: Theme.spacing.lg;
+                    alignment: start;
+                    
+                    Arc {
+                        value: current-val;
+                        start-angle: -90deg;
+                        end-angle: 270deg; // Full circle
+                        active-brush: Theme.palette.success;
+                    }
+                    
+                    VerticalLayout {
+                        spacing: Theme.spacing.md;
+                        alignment: center;
+                        
+                        Rectangle {
+                            width: 100px;
+                            height: 36px;
+                            background: Theme.palette.surface_raised;
+                            border-radius: Theme.spacing.sm;
+                            border-width: 1px;
+                            border-color: Theme.palette.border;
+                            TouchArea { clicked => { current-val = Math.min(1.0, current-val + 0.1); } }
+                            Text { text: "Increase"; vertical-alignment: center; horizontal-alignment: center; }
+                        }
+                        Rectangle {
+                            width: 100px;
+                            height: 36px;
+                            background: Theme.palette.surface_raised;
+                            border-radius: Theme.spacing.sm;
+                            border-width: 1px;
+                            border-color: Theme.palette.border;
+                            TouchArea { clicked => { current-val = Math.max(0.0, current-val - 0.1); } }
+                            Text { text: "Decrease"; vertical-alignment: center; horizontal-alignment: center; }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Example 3: Half-circle arcs
+        Card {
+            VerticalLayout {
+                spacing: Theme.spacing.md;
+                Text { text: "3. Half Arcs & Custom Sizing"; font-weight: Theme.typography.header_weight; }
+                
+                HorizontalLayout {
+                    spacing: Theme.spacing.xl;
+                    alignment: start;
+                    
+                    // Top half
+                    Arc {
+                        value: 0.6;
+                        start-angle: -90deg;
+                        end-angle: 90deg;
+                        radius: 50px;
+                        stroke-width: 15px;
+                        active-brush: Theme.palette.warning;
+                    }
+                    
+                    // Bottom half
+                    Arc {
+                        value: 0.3;
+                        start-angle: 90deg;
+                        end-angle: 270deg;
+                        radius: 50px;
+                        stroke-width: 8px;
+                        active-brush: Theme.palette.critical;
+                    }
+                }
+            }
+        }
+    }
+}
