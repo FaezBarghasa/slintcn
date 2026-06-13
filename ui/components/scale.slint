@@ -1,0 +1,29 @@
+import { Theme } from "../tokens.slint";
+
+export component Scale {
+    in property <int> tick-count: 10;
+    in property <string> orientation: "horizontal"; // "horizontal" or "vertical"
+    in property <length> tick-length: 8px;
+    in property <length> tick-thickness: 1px;
+
+    width: orientation == "horizontal" ? 100% : tick-length;
+    height: orientation == "horizontal" ? tick-length : 100%;
+
+    if (orientation == "horizontal") : HorizontalLayout {
+        alignment: space-between;
+        for i in root.tick-count : Rectangle {
+            width: root.tick-thickness;
+            height: root.tick-length;
+            background: Theme.palette.border;
+        }
+    }
+
+    if (orientation == "vertical") : VerticalLayout {
+        alignment: space-between;
+        for i in root.tick-count : Rectangle {
+            width: root.tick-length;
+            height: root.tick-thickness;
+            background: Theme.palette.border;
+        }
+    }
+}

@@ -1,0 +1,69 @@
+import { Theme } from "../tokens.slint";
+
+export component Chart {
+    in property <[float]> data-set: [0.0];
+    in property <float> min-y: 0.0;
+    in property <float> max-y: 100.0;
+    in property <brush> line-brush: Theme.palette.primary;
+
+    width: 200px;
+    height: 100px;
+
+    property <float> range: max(1.0, root.max-y - root.min-y);
+    property <float> h: root.height / 1px;
+    property <float> w: root.width / 1px;
+    property <int> len: root.data-set.length;
+    property <int> last-idx: max(0, root.len - 1);
+    property <float> safe-first: root.len > 0 ? root.data-set[0] : root.min-y;
+
+    Rectangle {
+        width: 100%;
+        height: 100%;
+        background: Theme.palette.surface;
+        border-radius: Theme.spacing.sm;
+        border-width: 1px;
+        border-color: Theme.palette.border;
+        clip: true;
+
+        // Grid lines (3 lines)
+        for i in 3 : Rectangle {
+            width: 100%;
+            height: 1px;
+            background: Theme.palette.border;
+            y: parent.height * (i + 1) / 4;
+        }
+
+        Path {
+            width: 100%;
+            height: 100%;
+            stroke: root.line-brush;
+            stroke-width: 2px;
+
+            MoveTo {
+                x: 0;
+                y: root.h - (((root.safe-first - root.min-y) / root.range) * root.h);
+            }
+
+            // Unrolled loop for 20 points
+            LineTo { x: (1.0 / 19.0) * root.w; y: root.h - (((root.data-set[min(1, root.last-idx)] - root.min-y) / root.range) * root.h); }
+            LineTo { x: (2.0 / 19.0) * root.w; y: root.h - (((root.data-set[min(2, root.last-idx)] - root.min-y) / root.range) * root.h); }
+            LineTo { x: (3.0 / 19.0) * root.w; y: root.h - (((root.data-set[min(3, root.last-idx)] - root.min-y) / root.range) * root.h); }
+            LineTo { x: (4.0 / 19.0) * root.w; y: root.h - (((root.data-set[min(4, root.last-idx)] - root.min-y) / root.range) * root.h); }
+            LineTo { x: (5.0 / 19.0) * root.w; y: root.h - (((root.data-set[min(5, root.last-idx)] - root.min-y) / root.range) * root.h); }
+            LineTo { x: (6.0 / 19.0) * root.w; y: root.h - (((root.data-set[min(6, root.last-idx)] - root.min-y) / root.range) * root.h); }
+            LineTo { x: (7.0 / 19.0) * root.w; y: root.h - (((root.data-set[min(7, root.last-idx)] - root.min-y) / root.range) * root.h); }
+            LineTo { x: (8.0 / 19.0) * root.w; y: root.h - (((root.data-set[min(8, root.last-idx)] - root.min-y) / root.range) * root.h); }
+            LineTo { x: (9.0 / 19.0) * root.w; y: root.h - (((root.data-set[min(9, root.last-idx)] - root.min-y) / root.range) * root.h); }
+            LineTo { x: (10.0 / 19.0) * root.w; y: root.h - (((root.data-set[min(10, root.last-idx)] - root.min-y) / root.range) * root.h); }
+            LineTo { x: (11.0 / 19.0) * root.w; y: root.h - (((root.data-set[min(11, root.last-idx)] - root.min-y) / root.range) * root.h); }
+            LineTo { x: (12.0 / 19.0) * root.w; y: root.h - (((root.data-set[min(12, root.last-idx)] - root.min-y) / root.range) * root.h); }
+            LineTo { x: (13.0 / 19.0) * root.w; y: root.h - (((root.data-set[min(13, root.last-idx)] - root.min-y) / root.range) * root.h); }
+            LineTo { x: (14.0 / 19.0) * root.w; y: root.h - (((root.data-set[min(14, root.last-idx)] - root.min-y) / root.range) * root.h); }
+            LineTo { x: (15.0 / 19.0) * root.w; y: root.h - (((root.data-set[min(15, root.last-idx)] - root.min-y) / root.range) * root.h); }
+            LineTo { x: (16.0 / 19.0) * root.w; y: root.h - (((root.data-set[min(16, root.last-idx)] - root.min-y) / root.range) * root.h); }
+            LineTo { x: (17.0 / 19.0) * root.w; y: root.h - (((root.data-set[min(17, root.last-idx)] - root.min-y) / root.range) * root.h); }
+            LineTo { x: (18.0 / 19.0) * root.w; y: root.h - (((root.data-set[min(18, root.last-idx)] - root.min-y) / root.range) * root.h); }
+            LineTo { x: (19.0 / 19.0) * root.w; y: root.h - (((root.data-set[min(19, root.last-idx)] - root.min-y) / root.range) * root.h); }
+        }
+    }
+}
