@@ -4,13 +4,13 @@ export component Toast {
     in property <string> title: "";
     in property <string> description: "";
     in property <string> variant: "default"; // "default", "success", "error"
-    in-out property <bool> visible: true;
+    in-out property <bool> show-toast: true;
     
     callback dismissed();
     
     width: 300px;
     
-    if (root.visible) : Rectangle {
+    if (root.show-toast) : Rectangle {
         border-radius: Theme.spacing.md;
         border-width: 1px;
         border-color: root.variant == "error" ? Theme.palette.critical : (root.variant == "success" ? Theme.palette.success : Theme.palette.border);
@@ -57,7 +57,7 @@ export component Toast {
                 
                 ta := TouchArea {
                     clicked => {
-                        root.visible = false;
+                        root.show-toast = false;
                         root.dismissed();
                     }
                 }

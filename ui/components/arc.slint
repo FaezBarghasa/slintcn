@@ -29,14 +29,14 @@ export component Arc {
         stroke-width: root.stroke-width;
 
         MoveTo {
-            x: root.start-x;
-            y: root.start-y;
+            x: root.start-x / 1px;
+            y: root.start-y / 1px;
         }
         ArcTo {
-            radius-x: root.radius;
-            radius-y: root.radius;
-            x: root.center-x + radius * Math.sin(root.end-angle);
-            y: root.center-y - radius * Math.cos(root.end-angle);
+            radius-x: root.radius / 1px;
+            radius-y: root.radius / 1px;
+            x: (root.center-x + radius * Math.sin(root.end-angle)) / 1px;
+            y: (root.center-y - radius * Math.cos(root.end-angle)) / 1px;
             sweep: true;
             large-arc: (root.end-angle - root.start-angle) > 180deg;
         }
@@ -49,14 +49,14 @@ export component Arc {
         stroke-width: root.stroke-width;
 
         MoveTo {
-            x: root.start-x;
-            y: root.start-y;
+            x: root.start-x / 1px;
+            y: root.start-y / 1px;
         }
         ArcTo {
-            radius-x: root.radius;
-            radius-y: root.radius;
-            x: root.end-x;
-            y: root.end-y;
+            radius-x: root.radius / 1px;
+            radius-y: root.radius / 1px;
+            x: root.end-x / 1px;
+            y: root.end-y / 1px;
             sweep: true;
             large-arc: (root.current-angle - root.start-angle) > 180deg;
         }

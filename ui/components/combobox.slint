@@ -1,5 +1,5 @@
 import { Theme } from "../tokens.slint";
-import { ScrollView, TextEdit } from "std-widgets.slint";
+import { ScrollView, LineEdit } from "std-widgets.slint";
 
 export component Combobox {
     in property <[string]> options: [];
@@ -26,10 +26,9 @@ export component Combobox {
             padding-right: Theme.spacing.md;
             alignment: space-between;
             
-            input := TextEdit {
-                text: "";
+            input := LineEdit {
                 font-size: Theme.typography.body_size;
-                vertical-alignment: center;
+                placeholder-text: root.placeholder;
             }
             
             Text {
