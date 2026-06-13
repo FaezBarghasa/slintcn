@@ -56,14 +56,14 @@ export component Spinner {
                 property <length> center-y: parent.height / 2;
 
                 MoveTo {
-                    x: center-x;
-                    y: center-y - radius;
+                    x: center-x / 1px;
+                    y: (center-y - radius) / 1px;
                 }
                 ArcTo {
-                    radius-x: radius;
-                    radius-y: radius;
-                    x: center-x + radius;
-                    y: center-y;
+                    radius-x: radius / 1px;
+                    radius-y: radius / 1px;
+                    x: (center-x + radius) / 1px;
+                    y: center-y / 1px;
                     sweep: true;
                 }
             }

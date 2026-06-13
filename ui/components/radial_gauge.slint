@@ -43,6 +43,10 @@ export component RadialGauge {
         background: active ? root.accent-brush : Theme.palette.border;
     }
 
+    property <length> needle-len: 50px;
+    property <length> tip-x: root.center-x + root.needle-len * Math.sin(root.current-angle);
+    property <length> tip-y: root.center-y - root.needle-len * Math.cos(root.current-angle);
+
     // Needle path using coordinates
     Path {
         width: 100%;
@@ -50,18 +54,13 @@ export component RadialGauge {
         stroke: Theme.palette.critical;
         stroke-width: 3px;
 
-        // Start at center, end at tick radius
-        property <length> needle-len: 50px;
-        property <length> tip-x: root.center-x + needle-len * Math.sin(root.current-angle);
-        property <length> tip-y: root.center-y - needle-len * Math.cos(root.current-angle);
-
         MoveTo {
-            x: root.center-x;
-            y: root.center-y;
+            x: root.center-x / 1px;
+            y: root.center-y / 1px;
         }
         LineTo {
-            x: self.tip-x;
-            y: self.tip-y;
+            x: root.tip-x / 1px;
+            y: root.tip-y / 1px;
         }
     }
 

@@ -23,10 +23,10 @@ export component Gauge inherits Rectangle {
         stroke: Theme.palette.surface_raised;
         stroke-width: 10px;
 
-        MoveTo { x: 20px; y: 130px; }
+        MoveTo { x: 20; y: 130; }
         ArcTo {
-            radius-x: 55px; radius-y: 55px;
-            x: 130px; y: 130px;
+            radius-x: 55; radius-y: 55;
+            x: 130; y: 130;
             sweep: true;
             large-arc: false;
         }
@@ -37,10 +37,10 @@ export component Gauge inherits Rectangle {
         stroke: Theme.palette.primary;
         stroke-width: 10px;
 
-        MoveTo { x: 20px; y: 130px; }
+        MoveTo { x: 20; y: 130; }
         ArcTo {
-            radius-x: 55px; radius-y: 55px;
-            x: 75px; y: 25px; // Static endpoint
+            radius-x: 55; radius-y: 55;
+            x: 75; y: 25; // Static endpoint
             sweep: true;
             large-arc: false;
         }

@@ -7,12 +7,12 @@ export component ButtonMatrix {
     
     callback clicked(int, string);
 
+    property <int> rows: Math.ceil(root.buttons.length / root.cols);
+
     width: 100%;
 
     VerticalLayout {
         spacing: Theme.spacing.xs;
-
-        property <int> rows: Math.ceil(buttons.length / cols);
 
         for row-idx in root.rows : HorizontalLayout {
             spacing: Theme.spacing.xs;
